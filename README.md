@@ -225,11 +225,16 @@ Vá para Exibir > Painel de Comandos ou pressione Ctrl + Shift + P.
 
 11. Com Terminal do editor aberto rode o comando
 
+12. Caso o seu emulador não esteja ligado, execute o seguinte comando:
+```shell
+Para iniciar um emulador, utilize 'flutter emulators --launch <id_do_emulador>'.
+```
+13. Após conectar o emulador, execute o comando:
 ```shell
 flutter run
 ```
 
-12. Selecione uma das opções
+14. Selecione uma das opções
 
 Tela final do test-drive:
 ![alt text](img/test-drive.png)
