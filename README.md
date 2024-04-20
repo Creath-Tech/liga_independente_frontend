@@ -225,15 +225,6 @@ Vá para Exibir > Painel de Comandos ou pressione Ctrl + Shift + P.
 
 11. Com Terminal do editor aberto rode o comando
 
-Claro, aqui está uma versão melhorada do texto:
-
-12. Caso o seu emulador não esteja ligado, execute o seguinte comando:
-```shell
-Para iniciar um emulador, utilize 'flutter emulators --launch <id_do_emulador>'.
-flutter run
-```
-
-13. Após conectar o emulador, execute o comando:
 ```shell
 flutter run
 ```
