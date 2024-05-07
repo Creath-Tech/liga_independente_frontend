@@ -1,26 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:liga_independente_frontend/src/services/auth_service.dart';
+import 'package:liga_independente_frontend/src/controllers/login_controller.dart';
 import 'package:liga_independente_frontend/src/widgets/custom_input.dart';
 import 'package:liga_independente_frontend/src/widgets/primary_button.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
-
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final TextEditingController loginEC = TextEditingController();
-  final TextEditingController passwordEC = TextEditingController();
-  final AuthService _authService = AuthService();
-
-  void signIn() async {
-    var loginSucess = await _authService.signIn(loginEC.text, passwordEC.text);
-
-    print('LOGIN EFETUADO COM SUCESSO : ${loginSucess}');
-  }
-
+  final LoginController loginController = LoginController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,10 +24,12 @@ class _LoginPageState extends State<LoginPage> {
           ),
 
           // text inputs
-          CustomInput(controller: loginEC, hintText: 'Digite seu login'),
+          CustomInput(
+              controller: loginController.loginEC,
+              hintText: 'Digite seu login'),
 
           CustomInput(
-            controller: passwordEC,
+            controller: loginController.passwordEC,
             hintText: 'Digite sua senha',
             obscureText: true,
           ),
@@ -47,7 +39,7 @@ class _LoginPageState extends State<LoginPage> {
           // login button
           PrimaryButton(
             text: 'Entrar',
-            onPressed: signIn,
+            onPressed: loginController.signIn,
           ),
           // no have account ?
 
