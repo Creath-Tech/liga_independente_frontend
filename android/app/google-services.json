@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "276067846352",
+    "project_id": "liga-independente-app",
+    "storage_bucket": "liga-independente-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:276067846352:android:37e2b03d049ea4eca2f6d5",
+        "android_client_info": {
+          "package_name": "com.example.liga_independente_frontend"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBbGc2f9EhMCPZZogDws_TMC2BIC4rZiIo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
