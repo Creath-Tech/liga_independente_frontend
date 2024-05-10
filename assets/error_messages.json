@@ -1,0 +1,5 @@
+{
+    "invalid-credential": "Usuário ou senha incorreta!",
+    "too-many-requests": "Muitas tentativas de login. Tente novamente mais tarde.",
+    "email-already-in-use": "Este email já está cadastrado."
+}
