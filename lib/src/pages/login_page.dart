@@ -1,7 +1,14 @@
+import 'dart:convert';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:liga_independente_frontend/src/controllers/login_controller.dart';
+import 'package:liga_independente_frontend/src/services/auth_service.dart';
+import 'package:liga_independente_frontend/src/utils/error_messages.dart';
 import 'package:liga_independente_frontend/src/widgets/custom_input.dart';
 import 'package:liga_independente_frontend/src/widgets/primary_button.dart';
+import 'package:liga_independente_frontend/src/widgets/error_message.dart';
+import 'package:liga_independente_frontend/src/widgets/sucess_message.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -10,7 +17,9 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final LoginController loginController = LoginController();
+  final LoginController loginController =
+      LoginController(AuthService(FirebaseAuth.instance));
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,9 +47,19 @@ class _LoginPageState extends State<LoginPage> {
 
           // login button
           PrimaryButton(
-            text: 'Entrar',
-            onPressed: loginController.signIn,
-          ),
+              text: 'Entrar',
+              onPressed: () async {
+                final jsonString = await ErrorMessages().get(context);
+                final errorMessages = jsonDecode(jsonString);
+
+                loginController.signIn(onSucess: () {
+                  SucessMessage.show(context, 'Login efetuado com sucesso!');
+                }, onError: (e) {
+                  if (errorMessages.containsKey(e.code)) {
+                    ErrorMessage.show(context, errorMessages[e.code]);
+                  }
+                });
+              }),
           // no have account ?
 
           // divider
