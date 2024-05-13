@@ -331,6 +331,24 @@ Execute os testes apontando para o servidor Appium e o dispositivo/emulador conf
 
 Este README oferece uma visão geral básica para começar com o Appium em Windows. Certifique-se de explorar a documentação oficial do Appium para mais detalhes e guias avançados.
 
+# Arquitetura de software
+
+A estrutura escolhida e aplicada ao projeto foi a MVC, que consiste numa divisão da aplicação em três diferentes camadas:
+   1. Model - Manipulação dos dados;
+   2. View - Interação do usuário;
+   3. Controller - Camada de controle.
+A arquitetura MVC foi selecionada por facilitar a implementação de camadas de segurança, agilizar a atualização da interface da aplicação e
+facilitar a manutenção do código.
+Leia mais sobre essa arquitetura em: [Link](https://learn.microsoft.com/pt-br/aspnet/core/mvc/overview?view=aspnetcore-8.0)
+
+Neste projeto, utilizamos a seguinte organização de pastas:
+
+![pastas-arq](/img/pastas-arq.png)
+
+   1. A pasta Controllers representa a camada de controle da nossa arquitetura;
+   2. A pasta Pages equivale à camada de interação do usuário;
+   3. A pasta Services corresponde à manipulação dos dados.
+
 # Feedback e Perguntas
 
 Então agradeceria seu feedback e perguntas sobre a documentação do projeto. Suas observações me ajudarão a melhorar minhas habilidades.
