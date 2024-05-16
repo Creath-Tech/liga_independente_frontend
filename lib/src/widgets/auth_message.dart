@@ -4,13 +4,15 @@ import 'package:liga_independente_frontend/src/colors.dart';
 class AuthMessage extends StatelessWidget {
   final String text;
   final bool visible;
+  final Color color;
   final BuildContext context;
 
   const AuthMessage(
       {super.key,
       required this.text,
       required this.visible,
-      required this.context});
+      required this.context,
+      required this.color});
 
   @override
   Widget build(context) {

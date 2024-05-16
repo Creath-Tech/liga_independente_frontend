@@ -3,5 +3,6 @@
     "too-many-requests": "Muitas tentativas de login. Tente novamente mais tarde.",
     "email-already-in-use": "Este email já está cadastrado."
     "invalid-email": "E-MAIL INVÁLIDO",
-    "argument-error": "PREENCHA OS CAMPOS"
+    "argument-error": "PREENCHA OS CAMPOS",
+    "user-not-found": "E-MAIL NÃO CADASTRADO!"
 }

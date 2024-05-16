@@ -3,9 +3,14 @@ import 'package:liga_independente_frontend/src/colors.dart';
 
 class PrimaryButton extends StatelessWidget {
   final Function() onPressed;
+  final Color color;
   final String text;
 
-  const PrimaryButton({super.key, required this.onPressed, required this.text});
+  const PrimaryButton(
+      {super.key,
+      required this.onPressed,
+      required this.text,
+      required this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +19,7 @@ class PrimaryButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-            backgroundColor: secondarycolor,
+            backgroundColor: color,
             padding: const EdgeInsets.symmetric(vertical: 10),
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),

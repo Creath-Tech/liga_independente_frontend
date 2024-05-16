@@ -17,4 +17,15 @@ class AuthService {
       return Left(_);
     }
   }
+
+  Future<Either<FirebaseAuthException, bool>> recoveryPassword(
+      String email) async {
+    try {
+      await _firebaseAuth.sendPasswordResetEmail(email: email);
+
+      return const Right(true);
+    } on FirebaseAuthException catch (_) {
+      return Left(_);
+    }
+  }
 }
