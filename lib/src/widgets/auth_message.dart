@@ -6,13 +6,15 @@ class AuthMessage extends StatelessWidget {
   final bool visible;
   final Color color;
   final BuildContext context;
+  final double height;
 
   const AuthMessage(
       {super.key,
       required this.text,
       required this.visible,
       required this.context,
-      required this.color});
+      required this.color,
+      this.height = 30});
 
   @override
   Widget build(context) {
@@ -24,7 +26,7 @@ class AuthMessage extends StatelessWidget {
           color: errorboxcolor,
         ),
         alignment: Alignment.center,
-        height: 60,
+        height: height,
         width: double.infinity,
         child: Text(
           text,

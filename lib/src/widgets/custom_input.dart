@@ -7,6 +7,7 @@ class CustomInput extends StatelessWidget {
   final String hintText;
   final bool obscureText;
   final String labelText;
+  final Color color;
 
   const CustomInput({
     super.key,
@@ -14,6 +15,7 @@ class CustomInput extends StatelessWidget {
     this.hintText = "",
     this.obscureText = false,
     this.labelText = "",
+    this.color = const Color(0xFFf4ee35),
   });
 
   @override
@@ -30,11 +32,11 @@ class CustomInput extends StatelessWidget {
             labelStyle: CustomInputTextStyle.inputTextStyle,
             hintStyle: CustomInputTextStyle.inputTextStyle,
             border: UnderlineInputBorder(
-                borderSide: BorderSide(color: secondarycolor, width: 2)),
+                borderSide: BorderSide(color: color, width: 2)),
             enabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: secondarycolor, width: 2)),
+                borderSide: BorderSide(color: color, width: 2)),
             focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: secondarycolor, width: 2)),
+                borderSide: BorderSide(color: color, width: 2)),
             contentPadding: const EdgeInsets.symmetric(horizontal: 10)),
       ),
     );
