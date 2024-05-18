@@ -10,6 +10,7 @@ import 'package:liga_independente_frontend/src/utils/error_messages.dart';
 import 'package:liga_independente_frontend/src/widgets/auth_message.dart';
 import 'package:liga_independente_frontend/src/widgets/custom_input.dart';
 import 'package:liga_independente_frontend/src/widgets/primary_button.dart';
+import 'package:liga_independente_frontend/src/widgets/secondary_button.dart';
 
 class RecoveryPassPage extends StatefulWidget {
   const RecoveryPassPage({super.key});
@@ -25,7 +26,7 @@ class _RecoveryPassPageState extends State<RecoveryPassPage> {
   bool visible = false;
   String errorMsg = "";
   Color color = Colors.red;
-
+  Color inputColor = const Color(0xFFf4ee35);
   @override
   void dispose() {
     _recoveryPassController.dispose();
@@ -35,78 +36,122 @@ class _RecoveryPassPageState extends State<RecoveryPassPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black45,
+      backgroundColor: primarycolor,
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            CustomInput(
-              controller: _recoveryPassController.emailEC,
-              hintText: 'email@example.com',
-            ),
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 50),
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(
+                height: 50,
+              ),
 
-            //error message
-            AuthMessage(
-              text: errorMsg,
-              visible: visible,
-              context: context,
-              color: color,
-            ),
+              // logo ligaapp
+              Image.asset(
+                'assets/logo.png',
+                height: 160,
+              ),
+              Container(
+                alignment: Alignment.center,
+                child: const Text(
+                  "Para iniciar o processo de redefinição de senha, insira seu endereço de e-mail.",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              //input
+              CustomInput(
+                controller: _recoveryPassController.emailEC,
+                hintText: 'email@example.com',
+                color: inputColor,
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              //error message
+              AuthMessage(
+                text: errorMsg,
+                visible: visible,
+                context: context,
+                color: color,
+              ),
 
-            ValueListenableBuilder<int>(
-              valueListenable: _recoveryPassController.countdownNotifier,
-              builder: (context, countdown, child) {
-                return PrimaryButton(
-                  color: countdown > 0 ? Colors.grey : secondarycolor,
-                  text: countdown > 0
-                      ? '00:${countdown.toString().padLeft(2, '0')}'
-                      : 'ENVIAR',
-                  onPressed: countdown > 0
-                      ? () {
+              //Substituct
+              Visibility(
+                  visible: !visible,
+                  child: const SizedBox(
+                    height: 30,
+                  )),
+
+              const SizedBox(
+                height: 180,
+              ),
+
+              //Enviar
+              ValueListenableBuilder<int>(
+                valueListenable: _recoveryPassController.countdownNotifier,
+                builder: (context, countdown, child) {
+                  return PrimaryButton(
+                    color: countdown > 0 ? Colors.grey : secondarycolor,
+                    text: countdown > 0
+                        ? '00:${countdown.toString().padLeft(2, '0')}'
+                        : 'ENVIAR',
+                    onPressed: () async {
+                      final jsonString = await ErrorMessages().get(context);
+                      final errorMessages = jsonDecode(jsonString);
+
+                      if (_recoveryPassController.emailEC.text.isEmpty) {
+                        setState(() {
+                          color = Colors.red;
+                          inputColor = Colors.red;
+                          errorMsg = "INSIRA UM ENDEREÇO DE E-MAIL";
+                          visible = true;
+                        });
+                      } else {
+                        _recoveryPassController.recovery(onSucess: () {
                           setState(() {
                             color = Colors.green;
-                            errorMsg =
-                                "Caso exista uma conta com esse e-mail, será enviado um link para redefinir sua senha!";
+                            inputColor = Colors.green;
+                            errorMsg = "E-MAIL ENVIADO";
                             visible = true;
                           });
-                        }
-                      : () async {
-                          final jsonString = await ErrorMessages().get(context);
-                          final errorMessages = jsonDecode(jsonString);
-
-                          if (_recoveryPassController.emailEC.text.isEmpty) {
+                        }, onError: (e) {
+                          if (errorMessages.containsKey(e.code)) {
                             setState(() {
                               color = Colors.red;
-                              errorMsg = "Prencha o e-mail";
+                              inputColor = Colors.red;
+                              errorMsg = errorMessages[e.code];
                               visible = true;
                             });
-                          } else {
-                            _recoveryPassController.recovery(
-                                onSucess: () {},
-                                onError: (e) {
-                                  if (errorMessages.containsKey(e.code)) {
-                                    setState(() {
-                                      color = Colors.red;
-                                      errorMsg = errorMessages[e.code];
-                                      visible = true;
-                                    });
-                                  }
-                                });
                           }
-                        },
-                );
-              },
-            ),
+                        });
+                      }
+                    },
+                  );
+                },
+              ),
 
-            PrimaryButton(
-              text: 'Voltar',
-              color: Colors.grey,
-              onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const LoginPage(),
-                  )),
-            ),
-          ],
+              const SizedBox(
+                height: 10,
+              ),
+
+              //Voltar
+              SecondaryButton(
+                text: 'VOLTAR',
+                color: secondarycolor,
+                onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const LoginPage(),
+                    )),
+              ),
+            ],
+          ),
         ),
       ),
     );
