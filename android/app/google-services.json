@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:276067846352:android:37e2b03d049ea4eca2f6d5",
+        "mobilesdk_app_id": "1:276067846352:android:256a782f212d5efea2f6d5",
         "android_client_info": {
-          "package_name": "com.creath.ligaapp.ligaIndependenteFrontend"
+          "package_name": "com.creath.ligaapp.liga_independente_frontend"
         }
       },
       "oauth_client": [],
