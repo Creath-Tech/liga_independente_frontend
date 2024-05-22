@@ -11,8 +11,9 @@ class App extends StatefulWidget {
 class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: LoginPage(),
+    return MaterialApp(
+      theme: ThemeData(fontFamily: 'Inter'),
+      home: const LoginPage(),
     );
   }
 }
