@@ -317,6 +317,8 @@ Verifique a instalação do Appium:
 
 Isso deve mostrar a versão do Appium instalada.
 
+# Execute o Appium
+
 Execute o servidor Appium:
 
 
@@ -330,6 +332,31 @@ Escreva seus testes usando uma das bibliotecas de cliente do Appium (como Appium
 Execute os testes apontando para o servidor Appium e o dispositivo/emulador configurado.
 
 Este README oferece uma visão geral básica para começar com o Appium em Windows. Certifique-se de explorar a documentação oficial do Appium para mais detalhes e guias avançados.
+
+# Instalar o Appium Inspector
+
+O inspector é uma ferramenta para facilitar no mapeamento de componentes de tela que vão ser automatizados. Atraves da opção Start Session é possivel iniciar a execução do Simulador Android e executar o App. Os componentes podem ser clicados e apresetão as propriedades dos componentes. Uma outra opção é gravar as ações realizadas no App e gerar os codigos usados na criação dos testes automatizados.
+
+Escolha a versão do seu S.O.:
+
+URL: https://github.com/appium/appium-inspector/releases
+
+Configure a conexão com servidor Appium e com os dados da aplicação:
+
+**Servidor
+Remote Host: 127.0.0.1
+Remote Port: 4723
+
+**Desired Capabilities (JSON Representation)
+```markdown
+{
+  "platformName": "Android",
+  "appium:automationName": "UiAutomator2",
+  "appium:deviceName": "Android",
+  "appium:appPackage": "com.creath.ligaapp.liga_independente_frontend",
+  "appium:appActivity": ".MainActivity",
+}
+```
 
 # Arquitetura de software
 
