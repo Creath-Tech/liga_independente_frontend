@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:liga_independente_frontend/src/colors.dart';
 
 class PrimaryButton extends StatelessWidget {
   final Function() onPressed;

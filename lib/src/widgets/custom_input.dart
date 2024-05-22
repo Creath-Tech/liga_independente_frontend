@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:liga_independente_frontend/src/colors.dart';
 import 'package:liga_independente_frontend/src/widgets/styled_components/custom_input_text_style.dart';
 
 class CustomInput extends StatelessWidget {
