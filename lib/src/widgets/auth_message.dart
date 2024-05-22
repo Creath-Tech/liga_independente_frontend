@@ -30,8 +30,7 @@ class AuthMessage extends StatelessWidget {
         width: double.infinity,
         child: Text(
           text,
-          style: const TextStyle(color: Colors.red, fontSize: 13),
-          textAlign: TextAlign.center,
+          style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w700),
         ),
       ),
     );
