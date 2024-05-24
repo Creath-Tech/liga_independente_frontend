@@ -25,7 +25,7 @@ class _RecoveryPassPageState extends State<RecoveryPassPage> {
 
   bool visible = false;
   String errorMsg = "";
-  Color color = Colors.red;
+  Color color = errorColor;
   Color inputColor = const Color(0xFFf4ee35);
   @override
   void dispose() {
@@ -97,7 +97,7 @@ class _RecoveryPassPageState extends State<RecoveryPassPage> {
                 valueListenable: _recoveryPassController.countdownNotifier,
                 builder: (context, countdown, child) {
                   return PrimaryButton(
-                    color: countdown > 0 ? Colors.grey : secondarycolor,
+                    color: countdown > 0 ? disableColor : secondarycolor,
                     text: countdown > 0
                         ? '00:${countdown.toString().padLeft(2, '0')}'
                         : 'ENVIAR',
@@ -107,24 +107,24 @@ class _RecoveryPassPageState extends State<RecoveryPassPage> {
 
                       if (_recoveryPassController.emailEC.text.isEmpty) {
                         setState(() {
-                          color = Colors.red;
-                          inputColor = Colors.red;
+                          color = errorColor;
+                          inputColor = errorColor;
                           errorMsg = "INSIRA UM ENDEREÇO DE E-MAIL";
                           visible = true;
                         });
                       } else {
                         _recoveryPassController.recovery(onSucess: () {
                           setState(() {
-                            color = Colors.green;
-                            inputColor = Colors.green;
+                            color = sucessColor;
+                            inputColor = sucessColor;
                             errorMsg = "E-MAIL ENVIADO";
                             visible = true;
                           });
                         }, onError: (e) {
                           if (errorMessages.containsKey(e.code)) {
                             setState(() {
-                              color = Colors.red;
-                              inputColor = Colors.red;
+                              color = errorColor;
+                              inputColor = errorColor;
                               errorMsg = errorMessages[e.code];
                               visible = true;
                             });
