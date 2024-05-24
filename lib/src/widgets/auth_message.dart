@@ -14,13 +14,14 @@ class AuthMessage extends StatelessWidget {
       required this.visible,
       required this.context,
       required this.color,
-      this.height = 30});
+      this.height = 50});
 
   @override
   Widget build(context) {
     return Visibility(
       visible: visible,
       child: Container(
+        padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
           color: errorboxcolor,
