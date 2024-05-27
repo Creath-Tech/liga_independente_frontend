@@ -32,12 +32,14 @@ class _LoginPageState extends State<LoginPage> {
       backgroundColor: primarycolor,
       body: SingleChildScrollView(
         child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 50),
+          width: double.infinity,
+          margin: const EdgeInsets.symmetric(horizontal: 43),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // spacing
               const SizedBox(
+                width: double.infinity,
                 height: 50,
               ),
               // logo ligaapp

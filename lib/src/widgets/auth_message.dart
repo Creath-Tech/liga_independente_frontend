@@ -22,11 +22,12 @@ class AuthMessage extends StatelessWidget {
           color: errorboxcolor,
         ),
         alignment: Alignment.center,
-        height: 30,
-        width: 200,
+        height: 60,
+        width: double.infinity,
         child: Text(
           text,
           style: const TextStyle(color: Colors.red, fontSize: 13),
+          textAlign: TextAlign.center,
         ),
       ),
     );

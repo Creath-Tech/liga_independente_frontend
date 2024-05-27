@@ -10,15 +10,15 @@ class SocialButtonsLoginWidget extends StatelessWidget {
       children: [
         Image.asset(
           'assets/google.png',
-          height: 40,
+          height: 56,
         ),
         Image.asset(
           'assets/facebook.png',
-          height: 40,
+          height: 56,
         ),
         Image.asset(
           'assets/apple.png',
-          height: 40,
+          height: 56,
         )
       ],
     );
