@@ -2,6 +2,7 @@ import unittest
 from appium import webdriver
 from appium.options.android import UiAutomator2Options
 from appium.webdriver.common.appiumby import AppiumBy
+import time
 
 capabilities = dict(
     platformName='Android',
@@ -36,13 +37,34 @@ class TestAppium(unittest.TestCase):
         buttonEntrar = self.driver.find_element(by=AppiumBy.XPATH, value='//*[@content-desc="ENTRAR"]')
         
         inputEmail.click()
-        inputEmail.send_keys("admin@admin.com")
-        
+        time.sleep(2)
+        inputEmail.send_keys("naoexiste@ligaapp.com")
+        time.sleep(2)
         inputPassword.click()
-        inputPassword.send_keys("12345")
-        
+        time.sleep(2)
+        inputPassword.send_keys("123456")
+        time.sleep(2)
         buttonEntrar.click()
+        time.sleep(2)
+        labelError = self.driver.find_element(by=AppiumBy.XPATH, value='//*[@content-desc="LOGIN OU SENHA INVÁLIDO"]')
 
+    def test_login_sucess(self) -> None:
+        inputEmail = self.driver.find_element(by=AppiumBy.XPATH, value='//*[@hint="E-mail"]')
+        inputPassword = self.driver.find_element(by=AppiumBy.XPATH, value='//*[@hint="Senha"]')
+        buttonEntrar = self.driver.find_element(by=AppiumBy.XPATH, value='//*[@content-desc="ENTRAR"]')
+        
+        inputEmail.click()
+        time.sleep(2)
+        inputEmail.send_keys("qualidade@ligaapp.com")
+        time.sleep(2)
+        inputPassword.click()
+        time.sleep(2)
+        inputPassword.send_keys("123456")
+        time.sleep(2)
+        buttonEntrar.click()
+        time.sleep(2)
+
+        #TODO: MAPEAR COMPONENTE PARA SUCESSO
 
 if __name__ == '__main__':
     unittest.main()
