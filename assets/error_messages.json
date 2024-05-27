@@ -1,0 +1,7 @@
+{
+    "invalid-credential": "LOGIN OU SENHA INVÁLIDO",
+    "too-many-requests": "Muitas tentativas de login. Tente novamente mais tarde.",
+    "email-already-in-use": "USUÁRIO JÁ POSSUI CADASTRO",
+    "invalid-email": "E-MAIL INVÁLIDO",
+    "argument-error": "PREENCHA OS CAMPOS"
+}
