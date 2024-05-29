@@ -7,11 +7,11 @@ class ForgotUPassword extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        alignment: Alignment.centerRight,
-        margin: const EdgeInsets.only(top: 15),
+    return Container(
+      alignment: Alignment.centerRight,
+      margin: const EdgeInsets.only(top: 15),
+      child: GestureDetector(
+        onTap: onTap,
         child: const Text(
           "Esqueceu a senha?",
           style: CustomInputTextStyle.inputTextStyle,
