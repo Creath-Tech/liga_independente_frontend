@@ -101,7 +101,7 @@ class _RecoveryPassPageState extends State<RecoveryPassPage> {
                     text: countdown > 0
                         ? '00:${countdown.toString().padLeft(2, '0')}'
                         : 'ENVIAR',
-                    onPressed: () async {
+                    onPressed: countdown > 0 ? () {} : () async {
                       final jsonString = await ErrorMessages().get(context);
                       final errorMessages = jsonDecode(jsonString);
 
