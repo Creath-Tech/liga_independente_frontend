@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:liga_independente_frontend/src/colors.dart';
 import 'package:liga_independente_frontend/src/controllers/login_controller.dart';
+import 'package:liga_independente_frontend/src/pages/register_page.dart';
 import 'package:liga_independente_frontend/src/services/auth_service.dart';
 import 'package:liga_independente_frontend/src/utils/error_messages.dart';
 import 'package:liga_independente_frontend/src/widgets/auth_message.dart';
@@ -97,7 +98,11 @@ class _LoginPageState extends State<LoginPage> {
                     }
                   }),
               // no have account ?
-              const NoHaveAccount(),
+              NoHaveAccount(
+                text: "Não possui conta?",
+                textButton: "Cadastrar",
+                onPressed: () =>  Navigator.push(context, MaterialPageRoute(builder: (context) => const RegisterPage(),)),
+              ),
 
               // divider
               const OrWidget(),
