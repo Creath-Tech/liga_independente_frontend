@@ -51,8 +51,7 @@ class _RegisterPageState extends State<RegisterPage> {
               //error message
               AuthMessage(text: errorMsg, visible: visible, context: context),
               // text inputs
-           
-              
+
               CustomInput(
                 controller: registerController.nameEC,
                 labelText: 'Nome',
@@ -93,6 +92,12 @@ class _RegisterPageState extends State<RegisterPage> {
                         errorMsg = "PREENCHA OS CAMPOS";
                         visible = true;
                       });
+                    } else if (registerController.passwordEC.text !=
+                        registerController.confirmPasswordEC.text) {
+                      setState(() {
+                        errorMsg = "SENHAS NÃO CONFEREM";
+                        visible = true;
+                      });
                     } else {
                       registerController.signUp(
                           onSucess: () {},
@@ -108,10 +113,13 @@ class _RegisterPageState extends State<RegisterPage> {
                   }),
               // no have account ?
               NoHaveAccount(
-                text: "Já possui conta?",
-                textButton: "Entrar",
-                onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginPage(),))
-              ),
+                  text: "Já possui conta?",
+                  textButton: "Entrar",
+                  onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const LoginPage(),
+                      ))),
 
               // divider
               const OrWidget(),
