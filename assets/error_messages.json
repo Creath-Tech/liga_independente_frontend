@@ -4,5 +4,5 @@
     "email-already-in-use": "USUÁRIO JÁ POSSUI CADASTRO",
     "invalid-email": "E-MAIL INVÁLIDO",
     "argument-error": "PREENCHA OS CAMPOS",
-    "weak-password": "SENHA FRACA! A SENHA DEVE CONTER NO MÍNIMO 6 CARACTERES."
+    "weak-password": "A SENHA DEVE CONTER NO MÍNIMO 6 CARACTERES."
 }
