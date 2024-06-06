@@ -8,7 +8,7 @@ import 'package:liga_independente_frontend/src/services/auth_service.dart';
 import 'package:liga_independente_frontend/src/utils/error_messages.dart';
 import 'package:liga_independente_frontend/src/widgets/auth_message.dart';
 import 'package:liga_independente_frontend/src/widgets/custom_input.dart';
-import 'package:liga_independente_frontend/src/widgets/no_have_account_widget.dart';
+import 'package:liga_independente_frontend/src/widgets/switch_auth_action.dart';
 import 'package:liga_independente_frontend/src/widgets/or_widget.dart';
 import 'package:liga_independente_frontend/src/widgets/primary_button.dart';
 import 'package:liga_independente_frontend/src/widgets/social_buttons_login_widget.dart';
@@ -112,7 +112,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     }
                   }),
               // no have account ?
-              NoHaveAccount(
+              SwitchAuthAction(
                   text: "Já possui conta?",
                   textButton: "Entrar",
                   onPressed: () => Navigator.push(

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class NoHaveAccount extends StatelessWidget {
+class SwitchAuthAction extends StatelessWidget {
   final String text;
   final String textButton;
   final Function() onPressed;
 
-  const NoHaveAccount({super.key, required this.text, required this.textButton, required this.onPressed});
+  const SwitchAuthAction({super.key, required this.text, required this.textButton, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
