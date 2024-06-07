@@ -2,27 +2,26 @@ import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:liga_independente_frontend/src/colors.dart';
-import 'package:liga_independente_frontend/src/controllers/login_controller.dart';
-import 'package:liga_independente_frontend/src/pages/register_page.dart';
+import 'package:liga_independente_frontend/src/controllers/register_controller.dart';
+import 'package:liga_independente_frontend/src/pages/login_page.dart';
 import 'package:liga_independente_frontend/src/services/auth_service.dart';
 import 'package:liga_independente_frontend/src/utils/error_messages.dart';
 import 'package:liga_independente_frontend/src/widgets/auth_message.dart';
 import 'package:liga_independente_frontend/src/widgets/custom_input.dart';
-import 'package:liga_independente_frontend/src/widgets/forgot_u_password.dart';
 import 'package:liga_independente_frontend/src/widgets/switch_auth_action.dart';
 import 'package:liga_independente_frontend/src/widgets/or_widget.dart';
 import 'package:liga_independente_frontend/src/widgets/primary_button.dart';
 import 'package:liga_independente_frontend/src/widgets/social_buttons_login_widget.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
-  final LoginController loginController =
-      LoginController(AuthService(FirebaseAuth.instance));
+class _RegisterPageState extends State<RegisterPage> {
+  final RegisterController registerController =
+      RegisterController(AuthService(FirebaseAuth.instance));
 
   bool visible = false;
   String errorMsg = "";
@@ -52,20 +51,29 @@ class _LoginPageState extends State<LoginPage> {
               //error message
               AuthMessage(text: errorMsg, visible: visible, context: context),
               // text inputs
+
               CustomInput(
-                controller: loginController.loginEC,
+                controller: registerController.nameEC,
+                labelText: 'Nome',
+              ),
+
+              CustomInput(
+                controller: registerController.loginEC,
                 hintText: 'user@example.com',
                 labelText: "E-mail",
               ),
 
               CustomInput(
-                controller: loginController.passwordEC,
+                controller: registerController.passwordEC,
                 labelText: 'Senha',
                 obscureText: true,
               ),
 
-              // forgot password
-              const ForgotUPassword(),
+              CustomInput(
+                controller: registerController.confirmPasswordEC,
+                labelText: 'Confirme sua senha',
+                obscureText: true,
+              ),
 
               // spacing
               const SizedBox(
@@ -74,18 +82,24 @@ class _LoginPageState extends State<LoginPage> {
 
               // login button
               PrimaryButton(
-                  text: 'ENTRAR',
+                  text: 'CADASTRAR',
                   onPressed: () async {
                     final jsonString = await ErrorMessages().get(context);
                     final errorMessages = jsonDecode(jsonString);
-                    if (loginController.loginEC.text.isEmpty ||
-                        loginController.passwordEC.text.isEmpty) {
+                    if (registerController.loginEC.text.isEmpty ||
+                        registerController.passwordEC.text.isEmpty) {
                       setState(() {
                         errorMsg = "PREENCHA OS CAMPOS";
                         visible = true;
                       });
+                    } else if (registerController.passwordEC.text !=
+                        registerController.confirmPasswordEC.text) {
+                      setState(() {
+                        errorMsg = "SENHAS NÃO CONFEREM";
+                        visible = true;
+                      });
                     } else {
-                      loginController.signIn(
+                      registerController.signUp(
                           onSucess: () {},
                           onError: (e) {
                             if (errorMessages.containsKey(e.code)) {
@@ -99,10 +113,13 @@ class _LoginPageState extends State<LoginPage> {
                   }),
               // no have account ?
               SwitchAuthAction(
-                text: "Não possui conta?",
-                textButton: "Cadastrar",
-                onPressed: () =>  Navigator.push(context, MaterialPageRoute(builder: (context) => const RegisterPage(),)),
-              ),
+                  text: "Já possui conta?",
+                  textButton: "Entrar",
+                  onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const LoginPage(),
+                      ))),
 
               // divider
               const OrWidget(),

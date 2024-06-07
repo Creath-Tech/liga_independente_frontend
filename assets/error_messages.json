@@ -3,5 +3,6 @@
     "too-many-requests": "Muitas tentativas de login. Tente novamente mais tarde.",
     "email-already-in-use": "USUÁRIO JÁ POSSUI CADASTRO",
     "invalid-email": "E-MAIL INVÁLIDO",
-    "argument-error": "PREENCHA OS CAMPOS"
+    "argument-error": "PREENCHA OS CAMPOS",
+    "weak-password": "A SENHA DEVE CONTER NO MÍNIMO 6 CARACTERES."
 }
