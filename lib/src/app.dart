@@ -11,9 +11,12 @@ class App extends StatefulWidget {
 class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(fontFamily: 'Inter'),
-      home: const LoginPage(),
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+      child: MaterialApp(
+        theme: ThemeData(fontFamily: 'Inter'),
+        home: const LoginPage(),
+      ),
     );
   }
 }
