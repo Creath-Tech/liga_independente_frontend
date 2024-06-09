@@ -49,7 +49,11 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
 
               //error message
-              AuthMessage(text: errorMsg, visible: visible, context: context),
+              AuthMessage(
+                text: errorMsg, 
+                visible: visible,
+                color: errorColor,
+                context: context),
               // text inputs
 
               CustomInput(
@@ -82,6 +86,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
               // login button
               PrimaryButton(
+                  color: secondarycolor,
                   text: 'CADASTRAR',
                   onPressed: () async {
                     final jsonString = await ErrorMessages().get(context);
