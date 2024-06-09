@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:liga_independente_frontend/src/colors.dart';
 import 'package:liga_independente_frontend/src/controllers/login_controller.dart';
+import 'package:liga_independente_frontend/src/pages/recovery_pass_page.dart';
 import 'package:liga_independente_frontend/src/pages/register_page.dart';
 import 'package:liga_independente_frontend/src/services/auth_service.dart';
 import 'package:liga_independente_frontend/src/utils/error_messages.dart';
@@ -50,7 +51,12 @@ class _LoginPageState extends State<LoginPage> {
               ),
 
               //error message
-              AuthMessage(text: errorMsg, visible: visible, context: context),
+              AuthMessage(
+                text: errorMsg,
+                visible: visible,
+                context: context,
+                color: Colors.red,
+              ),
               // text inputs
               CustomInput(
                 controller: loginController.loginEC,
@@ -65,7 +71,13 @@ class _LoginPageState extends State<LoginPage> {
               ),
 
               // forgot password
-              const ForgotUPassword(),
+              ForgotUPassword(
+                onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const RecoveryPassPage(),
+                    )),
+              ),
 
               // spacing
               const SizedBox(
@@ -74,6 +86,7 @@ class _LoginPageState extends State<LoginPage> {
 
               // login button
               PrimaryButton(
+                  color: secondarycolor,
                   text: 'ENTRAR',
                   onPressed: () async {
                     final jsonString = await ErrorMessages().get(context);

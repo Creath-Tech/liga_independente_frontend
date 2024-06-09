@@ -18,6 +18,17 @@ class AuthService {
     }
   }
 
+  Future<Either<FirebaseAuthException, bool>> recoveryPassword(
+        String email) async {
+      try {
+        await _firebaseAuth.sendPasswordResetEmail(email: email);
+
+        return const Right(true);
+      } on FirebaseAuthException catch (_) {
+        return Left(_);
+      }
+   }
+  
   Future<Either<FirebaseAuthException, UserCredential>> signUp(String email, String password, String name) async {
     try{
       final userCredential = await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);  
@@ -27,5 +38,4 @@ class AuthService {
       return Left(_);
     }
   }
-
 }
