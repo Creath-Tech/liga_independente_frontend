@@ -4,5 +4,6 @@
     "email-already-in-use": "Este email já está cadastrado.",
     "invalid-email": "E-MAIL INVÁLIDO",
     "argument-error": "PREENCHA OS CAMPOS",
-    "user-not-found": "E-MAIL NÃO CADASTRADO!"
+    "user-not-found": "E-MAIL NÃO CADASTRADO!",
+    "weak-password": "A SENHA DEVE CONTER NO MÍNIMO 6 CARACTERES."
 }
