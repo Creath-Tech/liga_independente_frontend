@@ -6,4 +6,11 @@ class CustomInputTextStyle {
     fontWeight: FontWeight.bold,
     fontSize: 14,
   );
+
+  static const TextStyle bioInputTextStyle = TextStyle(
+    color: Colors.white,
+    fontWeight: FontWeight.normal,
+    fontSize: 14,
+  );
+
 }
