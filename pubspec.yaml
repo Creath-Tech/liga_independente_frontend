@@ -71,7 +71,7 @@ flutter:
     - assets/icons/icon_whatsapp.png
     - assets/icons/icon_instagram.png
     - assets/icons/icon_facebook.png
-  #   - images/a_dot_ham.jpeg
+    - assets/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
