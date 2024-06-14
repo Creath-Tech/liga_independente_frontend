@@ -1,8 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:liga_independente_frontend/src/models/user_model.dart';
 
 class AuthService {
   final FirebaseAuth _firebaseAuth;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   AuthService(this._firebaseAuth);
 
@@ -33,9 +36,33 @@ class AuthService {
     try{
       final userCredential = await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);  
       userCredential.user!.updateDisplayName(name);
+
+      UserModel userModel = UserModel(
+        userId: userCredential.user!.uid,
+        email: email, 
+        name: name,
+        bio: '',
+        sports: [],
+        contacts: {}
+        );
+
+      setUser(userModel);
+
       return Right(userCredential);
     } on FirebaseAuthException catch (_) {
       return Left(_);
     }
+  }
+
+
+  void setUser(UserModel userModel) async{
+    await _firestore
+    .collection('users')
+    .doc(userModel.userId)
+    .set(userModel.toJson());
+  }
+
+  Stream<QuerySnapshot> getUsers() {
+    return _firestore.collection('users').snapshots();
   }
 }
