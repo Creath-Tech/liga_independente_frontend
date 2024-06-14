@@ -68,4 +68,21 @@ class AuthService {
   Stream<QuerySnapshot> getUsers() {
     return _firestore.collection('users').snapshots();
   }
+
+  Future<UserModel?> getUser(String userId) async {
+    try {
+      QuerySnapshot snapshot = await _firestore
+          .collection('users')
+          .where('userId', isEqualTo: userId)
+          .get();
+
+      if (snapshot.docs.isNotEmpty) {
+        var userData = snapshot.docs.first.data() as Map<String, dynamic>;
+        return UserModel.fromJson(userData);
+      }
+      return null;
+    } catch (e) {
+      rethrow;
+    }
+  }
 }
