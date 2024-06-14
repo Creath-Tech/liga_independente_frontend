@@ -49,6 +49,7 @@ class AuthService {
         );
 
       setUser(userModel);
+      userService.updateUser(userModel);
 
       return Right(userCredential);
     } on FirebaseAuthException catch (_) {
