@@ -2,10 +2,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:liga_independente_frontend/src/models/user_model.dart';
+import 'package:liga_independente_frontend/src/services/user_service.dart';
 
 class AuthService {
   final FirebaseAuth _firebaseAuth;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final UserService userService = UserService();
 
   AuthService(this._firebaseAuth);
 
@@ -47,6 +49,7 @@ class AuthService {
         );
 
       setUser(userModel);
+      userService.updateUser(userModel);
 
       return Right(userCredential);
     } on FirebaseAuthException catch (_) {
