@@ -3,7 +3,8 @@ import 'package:liga_independente_frontend/src/colors.dart';
 import 'package:liga_independente_frontend/src/pages/profile_page.dart';
 
 class HomeProfile extends StatelessWidget {
-  const HomeProfile({super.key});
+  final Function() filterOnTap;
+  const HomeProfile({super.key, required this.filterOnTap});
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +44,7 @@ class HomeProfile extends StatelessWidget {
             child: Row(
               children: [
                 GestureDetector(
-                  onTap: () {},
+                  onTap: filterOnTap,
                   child: const Icon(
                     Icons.filter_alt_rounded,
                     color: Colors.white,
