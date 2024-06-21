@@ -51,7 +51,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyBbGc2f9EhMCPZZogDws_TMC2BIC4rZiIo',
-    appId: '1:276067846352:android:37e2b03d049ea4eca2f6d5',
+    appId: '1:276067846352:android:256a782f212d5efea2f6d5',
     messagingSenderId: '276067846352',
     projectId: 'liga-independente-app',
     storageBucket: 'liga-independente-app.appspot.com',
@@ -63,6 +63,9 @@ class DefaultFirebaseOptions {
     messagingSenderId: '276067846352',
     projectId: 'liga-independente-app',
     storageBucket: 'liga-independente-app.appspot.com',
+    androidClientId: '276067846352-biqdchvkd4fduplc9lo2fl30rjlo4agu.apps.googleusercontent.com',
+    iosClientId: '276067846352-okiqnuel0j35oj1261llqo9mkfjiiqeq.apps.googleusercontent.com',
     iosBundleId: 'com.creath.ligaapp.ligaIndependenteFrontend',
   );
+
 }
