@@ -49,7 +49,6 @@ class AuthService {
         );
 
       setUser(userModel);
-      userService.updateUser(userModel);
 
       return Right(userCredential);
     } on FirebaseAuthException catch (_) {
@@ -84,5 +83,9 @@ class AuthService {
     } catch (e) {
       rethrow;
     }
+  }
+
+  void loggout() {
+    _firebaseAuth.signOut();
   }
 }

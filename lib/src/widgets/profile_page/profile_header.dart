@@ -5,9 +5,11 @@ import 'package:liga_independente_frontend/src/colors.dart';
 
 class ProfileHeader extends StatelessWidget {
   final void Function() onPressed;
+  final void Function() loggoutButton;
+   final void Function() backButton;
   final File? image;
 
-  const ProfileHeader({super.key, required this.onPressed, this.image});
+  const ProfileHeader({super.key, required this.onPressed, this.image, required this.loggoutButton, required this.backButton});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +28,17 @@ class ProfileHeader extends StatelessWidget {
               icon: const Icon(Icons.arrow_back_ios_new,
               color: Colors.white,
               ), 
-              onPressed: () {},)
+              onPressed: backButton,)
+            ),
+          
+          Positioned(
+            top: 7,
+            right: 7,
+            child: IconButton(
+              icon: const Icon(Icons.logout,
+              color: Colors.white,
+              ), 
+              onPressed: loggoutButton,)
             ),
 
           Container(
