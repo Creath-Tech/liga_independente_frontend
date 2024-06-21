@@ -12,7 +12,20 @@
           "package_name": "com.creath.ligaapp.liga_independente_frontend"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "276067846352-biqdchvkd4fduplc9lo2fl30rjlo4agu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.creath.ligaapp.liga_independente_frontend",
+            "certificate_hash": "1b44abef0f5b7fd27babcb0d877ddb72d56a7e93"
+          }
+        },
+        {
+          "client_id": "276067846352-iegk815ihcmd4vfo8mgntnhqu938vfde.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBbGc2f9EhMCPZZogDws_TMC2BIC4rZiIo"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "276067846352-iegk815ihcmd4vfo8mgntnhqu938vfde.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "276067846352-okiqnuel0j35oj1261llqo9mkfjiiqeq.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.creath.ligaapp.ligaIndependenteFrontend"
+              }
+            }
+          ]
         }
       }
     }
