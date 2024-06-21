@@ -12,34 +12,34 @@ class UserModel {
   Timestamp createdAt = Timestamp.now();
   Timestamp updatedAt = Timestamp.now();
 
-  UserModel(
-      {this.userId,
-      this.imageUrl,
-      this.name,
-      this.email,
-      this.bio = 'Amo jogar volei e futebol.',
-      this.sports = const ['Vôlei', 'futebol', 'handebol', 'natação', 'basquete', 'golfe'],
-      this.contacts = const {
-        'whatsapp' : '',
-        'facebook' : 'https://facebook.com/user1',
-        'instagram' : 'https://instagram.com/user1'
-      }
+  UserModel({
+    this.userId,
+    this.imageUrl,
+    this.name,
+    this.email,
+    this.bio = '',
+    this.sports = const [],
+    this.contacts = const {},
   });
 
-
-  UserModel.fromJson(json) {
+  UserModel.fromJson(Map<String, dynamic> json) {
     userId = json['userId'];
     imageUrl = json['imageUrl'];
     name = json['name'];
     email = json['email'];
-    bio = json['password'];
-    sports = json['phone'];
-    contacts = json['adress'];
-    createdAt = json['createdAt'].toDate();
-    updatedAt = json['updatedAt'].toDate();
+    bio = json['bio'];
+    sports = List<String>.from(json['sports'] ?? []);
+    contacts = json['contacts'] ?? {};
+
+    if (json['createdAt'] != null) {
+      createdAt = json['createdAt'] as Timestamp;
+    }
+    if (json['updatedAt'] != null) {
+      updatedAt = json['updatedAt'] as Timestamp;
+    }
   }
 
-  toJson() {
+  Map<String, dynamic> toJson() {
     return {
       'userId': userId,
       'imageUrl': imageUrl,
@@ -48,8 +48,8 @@ class UserModel {
       'bio': bio,
       'sports': sports,
       'contacts': contacts,
-      'createdAt' : createdAt,
-      'upadatedAt' : updatedAt
+      'createdAt': createdAt,
+      'updatedAt': updatedAt,
     };
   }
 }
