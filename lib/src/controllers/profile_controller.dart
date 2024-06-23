@@ -52,14 +52,22 @@ class ProfileController {
   }
 
   Future<void> updateImageFile() async {
-    String url = await imageUrl();
-    File file = await storageService.downloadImage(url);
-    imageFile.value = file;
+  try {
+    String? url = await imageUrl();
+    if (url != null) {
+      File? file = await storageService.downloadImage(url);
+      if (file != null) {
+        imageFile.value = file;
+      }
+    }
+  } catch (e) {
+    imageFile.value = null;
   }
+}
 
-  Future<String> imageUrl() {
-    return storageService.getImage(FirebaseAuth.instance.currentUser!.uid);
-  }
+Future<String?> imageUrl() async {
+  return await storageService.getImage(FirebaseAuth.instance.currentUser!.uid);
+}
 
   void pick(ImageSource source) async {
     final imagePicked = await imagePicker.pickImage(source: source);

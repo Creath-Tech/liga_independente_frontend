@@ -23,34 +23,36 @@ class StorageService {
     }
   }
 
-  Future<String> getImage(String uid) async {
+  Future<String?> getImage(String uid) async {
     String ref = 'images/img_$uid.jpg';
     
     try {
-
       String downloadURL = await storage.ref(ref).getDownloadURL();
       return downloadURL;
-
     } on FirebaseException catch (e) {
-
-      throw Exception('Ocorreu algum erro ao pegar a URL da imagem: ${e.code}');
-
+      if (e.code == 'object-not-found') {
+        return '';
+      } else {
+        throw Exception('Ocorreu algum erro ao pegar a URL da imagem: ${e.code}');
+      }
     }
   }
 
-  Future<File> downloadImage(String url) async {
-    final http.Response response = await http.get(Uri.parse(url));
+  Future<File?> downloadImage(String url) async {
+    try {
+      final http.Response response = await http.get(Uri.parse(url));
 
-    if (response.statusCode == 200) {
-      
-      final Directory tempDir = await getTemporaryDirectory();
-      final String tempPath = '${tempDir.path}/${DateTime.now()}.jpg';
-      final File file = File(tempPath);
-      await file.writeAsBytes(response.bodyBytes);
-      return file;
-
-    } else {
-      throw Exception('Erro ao baixar a imagem: ${response.statusCode}');
+      if (response.statusCode == 200) {
+        final Directory tempDir = await getTemporaryDirectory();
+        final String tempPath = '${tempDir.path}/${DateTime.now()}.jpg';
+        final File file = File(tempPath);
+        await file.writeAsBytes(response.bodyBytes);
+        return file;
+      } else {
+        throw Exception('Erro ao baixar a imagem: ${response.statusCode}');
+      }
+    } catch (e) {
+      return null;
     }
   }
 
