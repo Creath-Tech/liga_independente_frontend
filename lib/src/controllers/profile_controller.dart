@@ -1,8 +1,11 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:liga_independente_frontend/src/models/user_model.dart';
+import 'package:liga_independente_frontend/src/services/auth_service.dart';
+import 'package:liga_independente_frontend/src/services/storage_service.dart';
 import 'package:liga_independente_frontend/src/services/user_service.dart';
 
 class ProfileController {
@@ -12,8 +15,9 @@ class ProfileController {
   ValueNotifier<bool> editMode = ValueNotifier(false);
   ValueNotifier<bool> inBioEditMode = ValueNotifier(false);
   ValueNotifier<bool> inContactEditMode = ValueNotifier(false);
+  ValueNotifier<bool> isLoading = ValueNotifier(false);
 
-  UserService userService = UserService();
+  UserService userService;
   TextEditingController bioEC = TextEditingController();
   TextEditingController whatsappEC = TextEditingController();
   TextEditingController facebookEC = TextEditingController();
@@ -21,8 +25,24 @@ class ProfileController {
 
   List<TextEditingController> controllers = [];
 
-  ProfileController(){
+  late UserModel? userModel;
+  FirebaseAuth firebase = FirebaseAuth.instance;
+  AuthService authService = AuthService(FirebaseAuth.instance);
+  StorageService storageService = StorageService();
+
+  ProfileController(this.userService){
     controllers = [bioEC, whatsappEC, facebookEC, instagramEC];
+    updateUser();
+  }
+
+  void updateUser() async {
+    isLoading.value = true;
+    userModel = await authService.getUser(FirebaseAuth.instance.currentUser!.uid);
+    if (userModel != null) {
+      userService.updateUser(userModel);
+      await updateImageFile();
+    }
+    isLoading.value = false;
   }
 
   void clearAllEC(){
@@ -31,20 +51,43 @@ class ProfileController {
     }
   }
 
+  Future<void> updateImageFile() async {
+  try {
+    String? url = await imageUrl();
+    if (url != null) {
+      File? file = await storageService.downloadImage(url);
+      if (file != null) {
+        imageFile.value = file;
+      }
+    }
+  } catch (e) {
+    imageFile.value = null;
+  }
+}
+
+Future<String?> imageUrl() async {
+  return await storageService.getImage(FirebaseAuth.instance.currentUser!.uid);
+}
 
   void pick(ImageSource source) async {
     final imagePicked = await imagePicker.pickImage(source: source);
 
     if(imagePicked != null) {
       imageFile.value = File(imagePicked.path);
+
+      if(userService.user.userId != null) {
+        await storageService.uploadImage(imagePicked.path, FirebaseAuth.instance.currentUser!.uid);
+        userService.user.imageUrl = "images/img_${FirebaseAuth.instance.currentUser!.uid}.jpg";
+        updateLoggedUser();
+      }
+      
     }
   }
 
   void updateLoggedUser() {
-    UserModel updatedUser = userService.user;
 
     if (bioEC.text.isNotEmpty) {
-      updatedUser.bio = bioEC.text;
+      userModel!.bio = bioEC.text;
     }
 
     Map<String, String> updatedContacts = Map.from(userService.user.contacts ?? {});
@@ -61,9 +104,10 @@ class ProfileController {
       updatedContacts['instagram'] = instagramEC.text;
     }
 
-    updatedUser.contacts = updatedContacts;
-    userService.updateUser(updatedUser);
+    userModel!.contacts = updatedContacts;
+    userService.updateUser(userModel);
 
+    if(userModel != null) { authService.setUser(userModel!); }
     cancelAction();
   }
 
@@ -82,9 +126,9 @@ class ProfileController {
       editMode.value = !editMode.value;
     } else {
       inContactEditMode.value = !inContactEditMode.value;
-      whatsappEC.text = userService.user.contacts!['whatsapp'];
-      facebookEC.text = userService.user.contacts!['facebook'];
-      instagramEC.text = userService.user.contacts!['instagram'];
+      whatsappEC.text = userService.user.contacts?['whatsapp'] ?? "";
+      facebookEC.text = userService.user.contacts?['facebook'] ?? "";
+      instagramEC.text = userService.user.contacts?['instagram'] ?? "";
       editMode.value = !editMode.value;
     }
 

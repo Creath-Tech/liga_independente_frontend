@@ -42,6 +42,11 @@ dependencies:
   firebase_auth: ^4.19.5
   fpdart: ^1.1.0
   image_picker: ^1.1.2
+  cloud_firestore: ^4.17.5
+  provider: ^6.1.2
+  firebase_storage: ^11.7.7
+  http: ^0.13.4
+  path_provider: ^2.0.5
 
 dev_dependencies:
   flutter_launcher_icons: "^0.11.0"
