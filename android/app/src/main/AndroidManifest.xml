@@ -4,7 +4,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
 
     <application
-        android:label="liga_independente_frontend"
+        android:label="Liga"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

@@ -44,8 +44,21 @@ dependencies:
   image_picker: ^1.1.2
 
 dev_dependencies:
+  flutter_launcher_icons: "^0.11.0"
+  flutter_app_name: ^0.1.0
   flutter_test:
     sdk: flutter
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  remove_alpha_ios: true
+  image_path: "assets/logo.png"
+  adaptive_icon_background: "assets/logo_foreground.png"
+  adaptive_icon_foreground: "assets/logo_foreground.png"
+
+flutter_app_name:
+  name: "Liga"
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
