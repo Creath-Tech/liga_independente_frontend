@@ -133,4 +133,12 @@ Future<String?> imageUrl() async {
     }
 
   }
+
+  void updateSelectedSports(List<String> selectedSports) {
+    if (userModel != null) {
+      userModel!.sports = selectedSports;
+      userService.updateUser(userModel);
+      authService.setUser(userModel!);
+    }
+  }
 }

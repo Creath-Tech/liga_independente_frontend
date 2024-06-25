@@ -3,6 +3,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:liga_independente_frontend/src/colors.dart';
 import 'package:liga_independente_frontend/src/controllers/profile_controller.dart';
 import 'package:liga_independente_frontend/src/pages/login_page.dart';
+import 'package:liga_independente_frontend/src/pages/select_sports.dart';
 import 'package:liga_independente_frontend/src/widgets/cloud_button.dart';
 import 'package:liga_independente_frontend/src/widgets/custom_loading.dart';
 import 'package:liga_independente_frontend/src/widgets/modal_bottom_widget.dart';
@@ -133,9 +134,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           builder: (context, editMode, _) {
                             return ProfileBox(
                               editMode: editMode,
-                              onPressed: () {
-                                      
-                                    },
+                              onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => SelectSports(),)),
                               color: boxColor,
                               title: 'Esportes Praticados',
                               child: Row(children: [
