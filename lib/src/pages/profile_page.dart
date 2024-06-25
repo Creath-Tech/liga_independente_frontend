@@ -14,7 +14,6 @@ import 'package:liga_independente_frontend/src/widgets/profile_page/profile_moda
 import 'package:liga_independente_frontend/src/widgets/profile_page/text_input_bio.dart';
 import 'package:liga_independente_frontend/src/widgets/profile_page/rounded_text_input.dart';
 import 'package:liga_independente_frontend/src/widgets/secondary_button.dart';
-import 'package:provider/provider.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -24,7 +23,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  late ProfileController profileController = ProfileController(Provider.of(context, listen: false));
+  late ProfileController profileController = ProfileController();
 
   @override
   Widget build(BuildContext context) {

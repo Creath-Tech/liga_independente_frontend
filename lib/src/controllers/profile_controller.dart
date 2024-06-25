@@ -17,7 +17,7 @@ class ProfileController {
   ValueNotifier<bool> inContactEditMode = ValueNotifier(false);
   ValueNotifier<bool> isLoading = ValueNotifier(false);
 
-  UserService userService;
+  UserService userService = UserService.instance;
   TextEditingController bioEC = TextEditingController();
   TextEditingController whatsappEC = TextEditingController();
   TextEditingController facebookEC = TextEditingController();
@@ -25,25 +25,17 @@ class ProfileController {
 
   List<TextEditingController> controllers = [];
 
-  late UserModel? userModel;
   FirebaseAuth firebase = FirebaseAuth.instance;
   AuthService authService = AuthService(FirebaseAuth.instance);
   StorageService storageService = StorageService();
+  late UserModel? userModel;
 
-  ProfileController(this.userService){
+  ProfileController(){
     controllers = [bioEC, whatsappEC, facebookEC, instagramEC];
-    updateUser();
+    userModel = userService.user;
+    updateImageFile();
   }
 
-  void updateUser() async {
-    isLoading.value = true;
-    userModel = await authService.getUser(FirebaseAuth.instance.currentUser!.uid);
-    if (userModel != null) {
-      userService.updateUser(userModel);
-      await updateImageFile();
-    }
-    isLoading.value = false;
-  }
 
   void clearAllEC(){
     for(var controller in controllers) {
@@ -52,6 +44,7 @@ class ProfileController {
   }
 
   Future<void> updateImageFile() async {
+  isLoading.value = true;
   try {
     String? url = await imageUrl();
     if (url != null) {
@@ -63,6 +56,7 @@ class ProfileController {
   } catch (e) {
     imageFile.value = null;
   }
+  isLoading.value = false;
 }
 
 Future<String?> imageUrl() async {
@@ -132,13 +126,5 @@ Future<String?> imageUrl() async {
       editMode.value = !editMode.value;
     }
 
-  }
-
-  void updateSelectedSports(List<String> selectedSports) {
-    if (userModel != null) {
-      userModel!.sports = selectedSports;
-      userService.updateUser(userModel);
-      authService.setUser(userModel!);
-    }
   }
 }
