@@ -1,19 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:liga_independente_frontend/src/colors.dart';
-import 'package:liga_independente_frontend/src/controllers/profile_controller.dart';
 import 'package:liga_independente_frontend/src/controllers/select_sports_controller.dart';
 import 'package:liga_independente_frontend/src/widgets/auth_message.dart';
 import 'package:liga_independente_frontend/src/widgets/cloud_button.dart';
 import 'package:liga_independente_frontend/src/widgets/primary_button.dart';
-import 'package:provider/provider.dart';
 
 class SelectSports extends StatelessWidget {
   const SelectSports({super.key});
 
   @override
   Widget build(BuildContext context) {
-    ProfileController profileController = ProfileController(Provider.of(context, listen: false));
-    SelectSportsController selectSportsController = SelectSportsController(profileController);
+    SelectSportsController selectSportsController = SelectSportsController();
 
     return Scaffold(
       backgroundColor: primarycolor,

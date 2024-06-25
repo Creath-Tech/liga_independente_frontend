@@ -1,9 +1,14 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:liga_independente_frontend/src/controllers/profile_controller.dart';
+import 'package:liga_independente_frontend/src/models/user_model.dart';
 import 'package:liga_independente_frontend/src/pages/profile_page.dart';
+import 'package:liga_independente_frontend/src/services/auth_service.dart';
+import 'package:liga_independente_frontend/src/services/user_service.dart';
 
 class SelectSportsController {
-  late ProfileController profileController;
+  UserService userService = UserService.instance;
+  late UserModel? userModel;
+  final AuthService authService = AuthService(FirebaseAuth.instance);
   
   List<String> sports = [
     'Futebol', 'Volei', "Basquete", "Handebol", "Futsal", "Beach Tenis", 
@@ -13,8 +18,9 @@ class SelectSportsController {
   ValueNotifier<List<String>> selectedSports = ValueNotifier<List<String>>([]);
   ValueNotifier<bool> showError = ValueNotifier<bool>(false);
 
-  SelectSportsController(this.profileController) {
-    selectedSports.value = profileController.userService.user.sports ?? [];
+  SelectSportsController() {
+    selectedSports.value = userService.user.sports ?? [];
+    userModel = userService.user;
   }
   
   void toggleSportSelection(String sport) {
@@ -32,9 +38,18 @@ class SelectSportsController {
     } else {
       showError.value = false;
 
-      profileController.updateSelectedSports(selectedSports.value);
+      updateSelectedSports(selectedSports.value);
 
       Navigator.push(context, MaterialPageRoute(builder: (context) => ProfilePage(),));
     }
+  }
+
+    void updateSelectedSports(List<String> selectedSports) {
+    if (userModel != null) {
+      userModel!.sports = selectedSports;
+      userService.updateUser(userModel);
+      print('user model ${userModel!.userId}');
+      authService.setUser(userModel!);
+    } 
   }
 }
