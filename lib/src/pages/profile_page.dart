@@ -3,6 +3,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:liga_independente_frontend/src/colors.dart';
 import 'package:liga_independente_frontend/src/controllers/profile_controller.dart';
 import 'package:liga_independente_frontend/src/pages/login_page.dart';
+import 'package:liga_independente_frontend/src/pages/select_sports.dart';
 import 'package:liga_independente_frontend/src/widgets/cloud_button.dart';
 import 'package:liga_independente_frontend/src/widgets/custom_loading.dart';
 import 'package:liga_independente_frontend/src/widgets/modal_bottom_widget.dart';
@@ -13,7 +14,6 @@ import 'package:liga_independente_frontend/src/widgets/profile_page/profile_moda
 import 'package:liga_independente_frontend/src/widgets/profile_page/text_input_bio.dart';
 import 'package:liga_independente_frontend/src/widgets/profile_page/rounded_text_input.dart';
 import 'package:liga_independente_frontend/src/widgets/secondary_button.dart';
-import 'package:provider/provider.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -23,7 +23,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  late ProfileController profileController = ProfileController(Provider.of(context, listen: false));
+  late ProfileController profileController = ProfileController();
 
   @override
   Widget build(BuildContext context) {
@@ -133,9 +133,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           builder: (context, editMode, _) {
                             return ProfileBox(
                               editMode: editMode,
-                              onPressed: () {
-                                      
-                                    },
+                              onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => SelectSports(),)),
                               color: boxColor,
                               title: 'Esportes Praticados',
                               child: Row(children: [

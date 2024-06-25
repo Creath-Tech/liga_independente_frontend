@@ -7,7 +7,7 @@ import 'package:liga_independente_frontend/src/services/user_service.dart';
 class AuthService {
   final FirebaseAuth _firebaseAuth;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final UserService userService = UserService();
+  final UserService userService =  UserService.instance;
 
   AuthService(this._firebaseAuth);
 
@@ -17,6 +17,10 @@ class AuthService {
       final userCredential = await _firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password);
 
+      var userUid = userCredential.user!.uid;
+      var userModel = await getUser(userUid);
+
+      userService.updateUser(userModel);
       return Right(userCredential);
     } on FirebaseAuthException catch (_) {
       return Left(_);
@@ -47,7 +51,8 @@ class AuthService {
         sports: [],
         contacts: {}
         );
-
+        
+      userService.updateUser(userModel);
       setUser(userModel);
 
       return Right(userCredential);

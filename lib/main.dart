@@ -11,9 +11,10 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  UserService userService = UserService();
   runApp(
     ChangeNotifierProvider(
-      create: (context) => UserService(),
+      create: (context) => userService,
       child: const App()
     ));
 }
