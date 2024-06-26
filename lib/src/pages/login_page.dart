@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:liga_independente_frontend/src/colors.dart';
 import 'package:liga_independente_frontend/src/controllers/login_controller.dart';
-import 'package:liga_independente_frontend/src/pages/profile_page.dart';
+import 'package:liga_independente_frontend/src/pages/home_page.dart';
 import 'package:liga_independente_frontend/src/pages/recovery_pass_page.dart';
 import 'package:liga_independente_frontend/src/pages/register_page.dart';
 import 'package:liga_independente_frontend/src/services/auth_service.dart';
@@ -99,27 +99,31 @@ class _LoginPageState extends State<LoginPage> {
                         visible = true;
                       });
                     } else {
-                      loginController.signIn(
-                          onSucess: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) {
-                              return const ProfilePage();
-                            },));
+                      loginController.signIn(onSucess: () {
+                        Navigator.push(context, MaterialPageRoute(
+                          builder: (context) {
+                            return const HomePage();
                           },
-                          onError: (e) {
-                            if (errorMessages.containsKey(e.code)) {
-                              setState(() {
-                                errorMsg = errorMessages[e.code];
-                                visible = true;
-                              });
-                            }
+                        ));
+                      }, onError: (e) {
+                        if (errorMessages.containsKey(e.code)) {
+                          setState(() {
+                            errorMsg = errorMessages[e.code];
+                            visible = true;
                           });
+                        }
+                      });
                     }
                   }),
               // no have account ?
               SwitchAuthAction(
                 text: "Não possui conta?",
                 textButton: "Cadastrar",
-                onPressed: () =>  Navigator.push(context, MaterialPageRoute(builder: (context) => const RegisterPage(),)),
+                onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const RegisterPage(),
+                    )),
               ),
 
               // divider
