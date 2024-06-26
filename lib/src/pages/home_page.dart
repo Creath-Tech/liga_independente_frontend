@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:liga_independente_frontend/src/colors.dart';
+import 'package:liga_independente_frontend/src/controllers/home_controller.dart';
+import 'package:liga_independente_frontend/src/pages/profile_page.dart';
 import 'package:liga_independente_frontend/src/widgets/home_profile_widget.dart';
 import 'package:liga_independente_frontend/src/widgets/recommended_users_widget.dart';
 
@@ -10,7 +12,6 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-List<IconData> icons = [];
 final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
 // Function to open the end drawer
@@ -18,62 +19,13 @@ void _openEndDrawer() {
   _scaffoldKey.currentState?.openEndDrawer();
 }
 
-List<String> esportes = [
-  'Atletismo',
-  'Baseball',
-  'Basquete',
-  'Beach Tênis',
-  'Bocha',
-  'Boliche',
-  'Boxe',
-  'Canoagem',
-  'Capoeira',
-  'Ciclismo',
-  'Corrida',
-  'Crossfit',
-  'Dama',
-  'Dança',
-  'Dardos',
-  'Dominó',
-  'Escalada',
-  'Esgrima',
-  'Futebol',
-  'Futsal',
-  'Ginástica',
-  'Golfe',
-  'Handball',
-  'Hipismo',
-  'Jiu-Jitsu',
-  'Judô',
-  'Jump',
-  'Karatê',
-  'Muay Thai',
-  'Natação',
-  'Paintball',
-  'Pebolin',
-  'Pesca',
-  'Peteca',
-  'Queimada',
-  'Rafting',
-  'Rodeio',
-  'Rugby',
-  'Sinuca',
-  'Skate',
-  'Sumô',
-  'Surf',
-  'Tênis',
-  'Vôlei',
-  'Xadrez',
-  'Yoga',
-  'Zumba'
-];
-
 class _HomePageState extends State<HomePage> {
+  late HomeController homeController;
+
   @override
   void initState() {
     super.initState();
-    // Inicializar a lista com ícones padrão (por exemplo, ícones não selecionados)
-    icons = List.generate(esportes.length, (index) => Icons.circle_outlined);
+    homeController = HomeController();
   }
 
   @override
@@ -81,21 +33,96 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: primarycolor,
       key: _scaffoldKey,
-      body: SafeArea(
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          child: Column(
-            children: [
-              const HomeProfile(
-                filterOnTap: _openEndDrawer,
-              ),
-              const RecommendedUser(username: "Robert Fox"),
-              Divider(
-                color: boxColor,
-                thickness: 2,
-              ),
-            ],
+      body: SingleChildScrollView(
+        child: SafeArea(
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              children: [
+                HomeProfile(
+                  filterOnTap: _openEndDrawer,
+                  onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ProfilePage(),
+                      )),
+                ),
+                Expanded(
+                  child: StreamBuilder(
+                    stream: homeController.authService.getUsers(),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return Center(child: CircularProgressIndicator());
+                      }
+
+                      final data = snapshot.requireData;
+
+                      return ValueListenableBuilder(
+                        valueListenable: homeController.selectedSports,
+                        builder: (context, sports, _) {
+                          List filteredUsers = data.docs.where((doc) {
+                            if (sports.isEmpty) return true;
+                            return doc['sports']
+                                .any((sport) => sports.contains(sport));
+                          }).toList();
+
+                          return ListView.builder(
+                            itemCount: filteredUsers.length,
+                            itemBuilder: (context, index) {
+                              final doc = filteredUsers[index];
+                              return FutureBuilder<String?>(
+                                future: homeController.storageService
+                                    .getImage(doc.id),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return Center(
+                                        child: CircularProgressIndicator());
+                                  } else if (snapshot.hasError ||
+                                      !snapshot.hasData ||
+                                      snapshot.data!.isEmpty) {
+                                    // Handle the case when there is an error or no data
+                                    return Column(
+                                      children: [
+                                        RecommendedUser(
+                                          username: "${doc["name"]}",
+                                          esportes: doc["sports"],
+                                          url:
+                                              'https://icons.veryicon.com/png/o/file-type/linear-icon-2/user-132.png',
+                                        ),
+                                        Divider(
+                                          color: boxColor,
+                                          thickness: 2,
+                                        ),
+                                      ],
+                                    );
+                                  } else {
+                                    return Column(
+                                      children: [
+                                        RecommendedUser(
+                                          username: "${doc["name"]}",
+                                          esportes: doc["sports"],
+                                          url: snapshot.data!,
+                                        ),
+                                        Divider(
+                                          color: boxColor,
+                                          thickness: 2,
+                                        ),
+                                      ],
+                                    );
+                                  }
+                                },
+                              );
+                            },
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -154,15 +181,20 @@ class _HomePageState extends State<HomePage> {
                               IconButton(
                                 onPressed: () {
                                   setState(() {
-                                    if (icons[index] == Icons.circle_outlined) {
-                                      icons[index] = Icons.circle;
+                                    homeController.updateSports(
+                                        homeController.esportes[index]);
+                                    if (homeController.icons[index] ==
+                                        Icons.circle_outlined) {
+                                      homeController.icons[index] =
+                                          Icons.circle;
                                     } else {
-                                      icons[index] = Icons.circle_outlined;
+                                      homeController.icons[index] =
+                                          Icons.circle_outlined;
                                     }
                                   });
                                 },
                                 icon: Icon(
-                                  icons[
+                                  homeController.icons[
                                       index], // Usar o ícone específico para este item
                                   color: Colors.yellow,
                                 ),
@@ -170,7 +202,7 @@ class _HomePageState extends State<HomePage> {
                               Container(
                                 margin: const EdgeInsets.only(top: 8),
                                 child: Text(
-                                  esportes[index],
+                                  homeController.esportes[index],
                                   style: const TextStyle(color: Colors.white),
                                 ),
                               )
@@ -184,7 +216,7 @@ class _HomePageState extends State<HomePage> {
                             thickness: 2,
                           ),
                         ),
-                    itemCount: esportes.length),
+                    itemCount: homeController.esportes.length),
               ),
               const SizedBox(
                 height: 10,
