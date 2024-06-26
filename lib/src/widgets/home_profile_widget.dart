@@ -4,7 +4,14 @@ import 'package:liga_independente_frontend/src/pages/profile_page.dart';
 
 class HomeProfile extends StatelessWidget {
   final Function() filterOnTap;
-  const HomeProfile({super.key, required this.filterOnTap});
+  final Function() onTap;
+  final String imageUrl;
+  const HomeProfile(
+      {super.key,
+      required this.filterOnTap,
+      required this.onTap,
+      this.imageUrl =
+          'https://icons.veryicon.com/png/o/file-type/linear-icon-2/user-132.png'});
 
   @override
   Widget build(BuildContext context) {
@@ -15,12 +22,13 @@ class HomeProfile extends StatelessWidget {
         children: [
           Row(
             children: [
-              Container(
-                margin: const EdgeInsets.only(top: 25, left: 20),
-                child: GestureDetector(
-                  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ProfilePage(),)),
-                  child: const CircleAvatar(
+              GestureDetector(
+                onTap: onTap,
+                child: Container(
+                  margin: const EdgeInsets.only(top: 25, left: 20),
+                  child: CircleAvatar(
                     radius: 30,
+                    backgroundImage: NetworkImage(imageUrl),
                   ),
                 ),
               ),
