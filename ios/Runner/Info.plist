@@ -49,5 +49,10 @@
 	<string>Permita o acesso à galeria para completar seu perfil</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Permita o acesso à câmera para completar seu perfil</string>
+	<key>LSApplicationQueriesSchemes</key>
+<array>
+  <string>sms</string>
+  <string>tel</string>
+</array>
 </dict>
 </plist>
