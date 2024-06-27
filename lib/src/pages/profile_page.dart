@@ -280,13 +280,23 @@ class _ProfilePageState extends State<ProfilePage> {
                                                                         .contacts?['whatsapp'] !=
                                                                     null,
                                                                 child:
-                                                                    CloudButton(
-                                                                  color:
-                                                                      boxColorHeader,
-                                                                  child: Image
-                                                                      .asset(
-                                                                    'assets/icons/icon_whatsapp.png',
-                                                                    height: 25,
+                                                                    GestureDetector(
+                                                                  onTap: () {
+                                                                    profileController.abrirWhatsApp(profileController
+                                                                        .userService
+                                                                        .user
+                                                                        .contacts?['whatsapp']);
+                                                                  },
+                                                                  child:
+                                                                      CloudButton(
+                                                                    color:
+                                                                        boxColorHeader,
+                                                                    child: Image
+                                                                        .asset(
+                                                                      'assets/icons/icon_whatsapp.png',
+                                                                      height:
+                                                                          25,
+                                                                    ),
                                                                   ),
                                                                 ),
                                                               ),
