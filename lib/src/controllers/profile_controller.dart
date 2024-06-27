@@ -150,6 +150,16 @@ class ProfileController {
     return true;
   }
 
+  void abrirWhatsApp(String number) async {
+    var whatsappUrl = "whatsapp://send?phone=55$number&text=Olá,tudo bem ?";
+
+    if (await canLaunchUrl(Uri.parse(whatsappUrl))) {
+      await launchUrl(Uri.parse(whatsappUrl));
+    } else {
+      throw 'Could not launch $whatsappUrl';
+    }
+  }
+
   bool urlValidate(String instagramV, String facebookV) {
     if (isValidFacebookUrl(facebookV) && isValidInstagramUrl(instagramV)) {
       return true;
