@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:liga_independente_frontend/src/colors.dart';
 import 'package:liga_independente_frontend/src/controllers/home_controller.dart';
@@ -89,7 +90,8 @@ class _HomePageState extends State<HomePage> {
                                       ConnectionState.waiting) {
                                     return Center(
                                         child: CircularProgressIndicator());
-                                  } else {
+                                  } else if (doc.id !=
+                                      FirebaseAuth.instance.currentUser!.uid) {
                                     return Column(
                                       children: [
                                         RecommendedUser(
@@ -108,6 +110,7 @@ class _HomePageState extends State<HomePage> {
                                       ],
                                     );
                                   }
+                                  return Container();
                                 },
                               );
                             },
