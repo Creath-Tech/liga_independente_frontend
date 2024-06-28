@@ -40,13 +40,23 @@ class _HomePageState extends State<HomePage> {
             width: MediaQuery.of(context).size.width,
             child: Column(
               children: [
-                HomeProfile(
-                  filterOnTap: _openEndDrawer,
-                  onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ProfilePage(),
-                      )),
+                FutureBuilder(
+                  future: homeController.imageUrl(),
+                  builder: (context, snapshot) {
+                    return HomeProfile(
+                      filterOnTap: _openEndDrawer,
+                      imageUrl: snapshot.hasError ||
+                              snapshot.data!.isEmpty ||
+                              !snapshot.hasData
+                          ? 'https://icons.veryicon.com/png/o/file-type/linear-icon-2/user-132.png'
+                          : snapshot.data!,
+                      onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ProfilePage(),
+                          )),
+                    );
+                  },
                 ),
                 Expanded(
                   child: StreamBuilder(
@@ -79,31 +89,17 @@ class _HomePageState extends State<HomePage> {
                                       ConnectionState.waiting) {
                                     return Center(
                                         child: CircularProgressIndicator());
-                                  } else if (snapshot.hasError ||
-                                      !snapshot.hasData ||
-                                      snapshot.data!.isEmpty) {
-                                    // Handle the case when there is an error or no data
-                                    return Column(
-                                      children: [
-                                        RecommendedUser(
-                                          username: "${doc["name"]}",
-                                          esportes: doc["sports"],
-                                          url:
-                                              'https://icons.veryicon.com/png/o/file-type/linear-icon-2/user-132.png',
-                                        ),
-                                        Divider(
-                                          color: boxColor,
-                                          thickness: 2,
-                                        ),
-                                      ],
-                                    );
                                   } else {
                                     return Column(
                                       children: [
                                         RecommendedUser(
                                           username: "${doc["name"]}",
                                           esportes: doc["sports"],
-                                          url: snapshot.data!,
+                                          url: snapshot.hasError ||
+                                                  snapshot.data!.isEmpty ||
+                                                  !snapshot.hasData
+                                              ? 'https://icons.veryicon.com/png/o/file-type/linear-icon-2/user-132.png'
+                                              : snapshot.data!,
                                         ),
                                         Divider(
                                           color: boxColor,

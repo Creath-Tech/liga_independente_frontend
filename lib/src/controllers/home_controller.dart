@@ -17,6 +17,11 @@ class HomeController {
     }
   }
 
+  Future<String?> imageUrl() async {
+    return await storageService
+        .getImage(FirebaseAuth.instance.currentUser!.uid);
+  }
+
   List<String> esportes = [
     'Atletismo',
     'Baseball',
