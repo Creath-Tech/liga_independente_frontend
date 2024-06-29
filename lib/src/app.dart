@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:liga_independente_frontend/src/pages/login_page.dart';
+import 'package:liga_independente_frontend/src/services/auth_gate_service.dart';
 
 class App extends StatefulWidget {
   const App({super.key});
@@ -15,7 +15,7 @@ class _AppState extends State<App> {
       onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
       child: MaterialApp(
         theme: ThemeData(fontFamily: 'Inter'),
-        home: const LoginPage(),
+        home: const AuthGateService(),
       ),
     );
   }
