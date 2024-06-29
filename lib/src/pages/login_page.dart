@@ -3,9 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:liga_independente_frontend/src/colors.dart';
 import 'package:liga_independente_frontend/src/controllers/login_controller.dart';
-import 'package:liga_independente_frontend/src/pages/profile_page.dart';
 import 'package:liga_independente_frontend/src/pages/recovery_pass_page.dart';
-import 'package:liga_independente_frontend/src/pages/register_page.dart';
 import 'package:liga_independente_frontend/src/services/auth_service.dart';
 import 'package:liga_independente_frontend/src/utils/error_messages.dart';
 import 'package:liga_independente_frontend/src/widgets/auth_message.dart';
@@ -17,7 +15,8 @@ import 'package:liga_independente_frontend/src/widgets/primary_button.dart';
 import 'package:liga_independente_frontend/src/widgets/social_buttons_login_widget.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  final Function() onTap;
+  const LoginPage({super.key, required this.onTap});
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
@@ -101,9 +100,7 @@ class _LoginPageState extends State<LoginPage> {
                     } else {
                       loginController.signIn(
                           onSucess: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) {
-                              return const ProfilePage();
-                            },));
+                            
                           },
                           onError: (e) {
                             if (errorMessages.containsKey(e.code)) {
@@ -119,7 +116,7 @@ class _LoginPageState extends State<LoginPage> {
               SwitchAuthAction(
                 text: "Não possui conta?",
                 textButton: "Cadastrar",
-                onPressed: () =>  Navigator.push(context, MaterialPageRoute(builder: (context) => const RegisterPage(),)),
+                onPressed: widget.onTap,
               ),
 
               // divider
