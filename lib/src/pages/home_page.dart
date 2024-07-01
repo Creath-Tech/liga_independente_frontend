@@ -46,11 +46,9 @@ class _HomePageState extends State<HomePage> {
                   builder: (context, snapshot) {
                     return HomeProfile(
                       filterOnTap: _openEndDrawer,
-                      imageUrl: snapshot.hasError ||
-                              snapshot.data!.isEmpty ||
-                              !snapshot.hasData
-                          ? 'https://icons.veryicon.com/png/o/file-type/linear-icon-2/user-132.png'
-                          : snapshot.data!,
+                      imageUrl: snapshot.hasData
+                          ? snapshot.data!
+                          : 'https://icons.veryicon.com/png/o/file-type/linear-icon-2/user-132.png',
                       onTap: () => Navigator.push(
                           context,
                           MaterialPageRoute(
