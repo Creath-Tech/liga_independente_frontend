@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:liga_independente_frontend/src/colors.dart';
 import 'package:liga_independente_frontend/src/controllers/home_controller.dart';
 import 'package:liga_independente_frontend/src/pages/profile_page.dart';
+import 'package:liga_independente_frontend/src/widgets/custom_loading.dart';
 import 'package:liga_independente_frontend/src/widgets/home_profile_widget.dart';
 import 'package:liga_independente_frontend/src/widgets/recommended_users_widget.dart';
 
@@ -63,8 +64,8 @@ class _HomePageState extends State<HomePage> {
                   child: StreamBuilder(
                     stream: homeController.authService.getUsers(),
                     builder: (context, snapshot) {
-                      if (!snapshot.hasData) {
-                        return Center(child: CircularProgressIndicator());
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(child: customLoading());
                       }
 
                       final data = snapshot.requireData;
@@ -82,26 +83,36 @@ class _HomePageState extends State<HomePage> {
                             itemCount: filteredUsers.length,
                             itemBuilder: (context, index) {
                               final doc = filteredUsers[index];
+                              final image = homeController.storageService
+                                  .getImage(doc.id);
                               return FutureBuilder<String?>(
-                                future: homeController.storageService
-                                    .getImage(doc.id),
+                                future: image,
                                 builder: (context, snapshot) {
                                   if (snapshot.connectionState ==
                                       ConnectionState.waiting) {
-                                    return Center(
-                                        child: CircularProgressIndicator());
+                                    return Center(child: Container());
                                   } else if (doc.id !=
                                       FirebaseAuth.instance.currentUser!.uid) {
                                     return Column(
                                       children: [
-                                        RecommendedUser(
-                                          username: "${doc["name"]}",
-                                          esportes: doc["sports"],
-                                          url: snapshot.hasError ||
-                                                  snapshot.data!.isEmpty ||
-                                                  !snapshot.hasData
-                                              ? 'https://icons.veryicon.com/png/o/file-type/linear-icon-2/user-132.png'
-                                              : snapshot.data!,
+                                        GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ProfilePage(user: doc),
+                                                ));
+                                          },
+                                          child: RecommendedUser(
+                                            username: "${doc["name"]}",
+                                            esportes: doc["sports"],
+                                            url: snapshot.hasError ||
+                                                    snapshot.data!.isEmpty ||
+                                                    !snapshot.hasData
+                                                ? 'https://icons.veryicon.com/png/o/file-type/linear-icon-2/user-132.png'
+                                                : snapshot.data!,
+                                          ),
                                         ),
                                         Divider(
                                           color: boxColor,
