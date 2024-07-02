@@ -180,14 +180,4 @@ class ProfileController {
       editMode.value = !editMode.value;
     }
   }
-
-  void abrirWhatsApp(String number) async {
-    var whatsappUrl = "whatsapp://send?phone=55$number&text=Olá,tudo bem ?";
-
-    if (await canLaunchUrl(Uri.parse(whatsappUrl))) {
-      await launchUrl(Uri.parse(whatsappUrl));
-    } else {
-      throw 'Could not launch $whatsappUrl';
-    }
-  }
 }
