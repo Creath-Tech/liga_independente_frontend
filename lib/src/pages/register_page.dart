@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:liga_independente_frontend/src/colors.dart';
 import 'package:liga_independente_frontend/src/controllers/register_controller.dart';
-import 'package:liga_independente_frontend/src/pages/login_page.dart';
 import 'package:liga_independente_frontend/src/services/auth_service.dart';
 import 'package:liga_independente_frontend/src/utils/error_messages.dart';
 import 'package:liga_independente_frontend/src/widgets/auth_message.dart';
@@ -14,7 +13,8 @@ import 'package:liga_independente_frontend/src/widgets/primary_button.dart';
 import 'package:liga_independente_frontend/src/widgets/social_buttons_login_widget.dart';
 
 class RegisterPage extends StatefulWidget {
-  const RegisterPage({super.key});
+  final Function() onTap;
+  const RegisterPage({super.key, required this.onTap});
   @override
   State<RegisterPage> createState() => _RegisterPageState();
 }
@@ -120,11 +120,8 @@ class _RegisterPageState extends State<RegisterPage> {
               SwitchAuthAction(
                   text: "Já possui conta?",
                   textButton: "Entrar",
-                  onPressed: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const LoginPage(),
-                      ))),
+                  onPressed: widget.onTap
+              ),
 
               // divider
               const OrWidget(),

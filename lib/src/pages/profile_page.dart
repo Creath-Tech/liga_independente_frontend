@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:liga_independente_frontend/src/colors.dart';
 import 'package:liga_independente_frontend/src/controllers/profile_controller.dart';
-import 'package:liga_independente_frontend/src/pages/login_page.dart';
 import 'package:liga_independente_frontend/src/pages/select_sports.dart';
+import 'package:liga_independente_frontend/src/services/auth_gate_service.dart';
 import 'package:liga_independente_frontend/src/widgets/cloud_button.dart';
 import 'package:liga_independente_frontend/src/widgets/custom_loading.dart';
 import 'package:liga_independente_frontend/src/widgets/modal_bottom_widget.dart';
@@ -45,7 +45,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             backButton: () => Navigator.pop(context),
                             loggoutButton: () {
                               profileController.authService.loggout();
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginPage(),));
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => AuthGateService(),));
                             },
                             image: imageFile,
                             onPressed: () {

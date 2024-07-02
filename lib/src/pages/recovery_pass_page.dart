@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:liga_independente_frontend/src/colors.dart';
 import 'package:liga_independente_frontend/src/controllers/recovery_pass_controller.dart';
-import 'package:liga_independente_frontend/src/pages/login_page.dart';
+import 'package:liga_independente_frontend/src/pages/manager_pages.dart';
 import 'package:liga_independente_frontend/src/services/auth_service.dart';
 import 'package:liga_independente_frontend/src/utils/error_messages.dart';
 import 'package:liga_independente_frontend/src/widgets/auth_message.dart';
@@ -147,7 +147,7 @@ class _RecoveryPassPageState extends State<RecoveryPassPage> {
                 onPressed: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const LoginPage(),
+                      builder: (context) => const ManagerPages(),
                     )),
               ),
             ],

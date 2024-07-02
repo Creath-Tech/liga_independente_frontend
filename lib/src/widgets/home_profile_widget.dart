@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:liga_independente_frontend/src/colors.dart';
+import 'package:liga_independente_frontend/src/pages/profile_page.dart';
 
 class HomeProfile extends StatelessWidget {
   const HomeProfile({super.key});
@@ -15,8 +16,11 @@ class HomeProfile extends StatelessWidget {
             children: [
               Container(
                 margin: const EdgeInsets.only(top: 25, left: 20),
-                child: const CircleAvatar(
-                  radius: 30,
+                child: GestureDetector(
+                  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ProfilePage(),)),
+                  child: const CircleAvatar(
+                    radius: 30,
+                  ),
                 ),
               ),
             ],
