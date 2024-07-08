@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:liga_independente_frontend/src/colors.dart';
-import 'package:liga_independente_frontend/src/pages/profile_page.dart';
 
 class HomeProfile extends StatelessWidget {
   final Function() filterOnTap;
