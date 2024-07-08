@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -31,10 +32,10 @@ class ProfileController {
   StorageService storageService = StorageService();
   late UserModel? userModel;
 
-  ProfileController() {
+  ProfileController(String? uid) {
     controllers = [bioEC, whatsappEC, facebookEC, instagramEC];
     userModel = userService.user;
-    updateImageFile();
+    updateImageFile(uid);
   }
 
   void clearAllEC() {
@@ -43,10 +44,11 @@ class ProfileController {
     }
   }
 
-  Future<void> updateImageFile() async {
+  Future<void> updateImageFile(String? uid) async {
     isLoading.value = true;
     try {
-      String? url = await imageUrl();
+      String? url =
+          await imageUrl(uid ?? FirebaseAuth.instance.currentUser!.uid);
       if (url != null) {
         File? file = await storageService.downloadImage(url);
         if (file != null) {
@@ -59,9 +61,8 @@ class ProfileController {
     isLoading.value = false;
   }
 
-  Future<String?> imageUrl() async {
-    return await storageService
-        .getImage(FirebaseAuth.instance.currentUser!.uid);
+  Future<String?> imageUrl(String uid) async {
+    return await storageService.getImage(uid);
   }
 
   void pick(ImageSource source) async {
@@ -178,6 +179,14 @@ class ProfileController {
       facebookEC.text = userService.user.contacts?['facebook'] ?? "";
       instagramEC.text = userService.user.contacts?['instagram'] ?? "";
       editMode.value = !editMode.value;
+    }
+  }
+
+  bool socialCheck(DocumentSnapshot? user, String social) {
+    if (user != null) {
+      return user["contacts"]['$social'] != null;
+    } else {
+      return userService.user.contacts!['$social'] != null;
     }
   }
 }

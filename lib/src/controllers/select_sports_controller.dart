@@ -9,10 +9,18 @@ class SelectSportsController {
   UserService userService = UserService.instance;
   late UserModel? userModel;
   final AuthService authService = AuthService(FirebaseAuth.instance);
-  
+
   List<String> sports = [
-    'Futebol', 'Volei', "Basquete", "Handebol", "Futsal", "Beach Tenis", 
-    'Natação', 'Canoa', 'Corrida', 'Ciclismo'
+    'Futebol',
+    'Volei',
+    "Basquete",
+    "Handebol",
+    "Futsal",
+    "Beach Tenis",
+    'Natação',
+    'Canoa',
+    'Corrida',
+    'Ciclismo'
   ];
 
   ValueNotifier<List<String>> selectedSports = ValueNotifier<List<String>>([]);
@@ -22,13 +30,13 @@ class SelectSportsController {
     selectedSports.value = userService.user.sports ?? [];
     userModel = userService.user;
   }
-  
+
   void toggleSportSelection(String sport) {
     if (selectedSports.value.contains(sport)) {
       selectedSports.value = List.from(selectedSports.value)..remove(sport);
     } else {
       selectedSports.value = List.from(selectedSports.value)..add(sport);
-       showError.value = false;
+      showError.value = false;
     }
   }
 
@@ -40,16 +48,20 @@ class SelectSportsController {
 
       updateSelectedSports(selectedSports.value);
 
-      Navigator.push(context, MaterialPageRoute(builder: (context) => ProfilePage(),));
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ProfilePage(),
+          ));
     }
   }
 
-    void updateSelectedSports(List<String> selectedSports) {
+  void updateSelectedSports(List<String> selectedSports) {
     if (userModel != null) {
       userModel!.sports = selectedSports;
       userService.updateUser(userModel);
       print('user model ${userModel!.userId}');
       authService.setUser(userModel!);
-    } 
+    }
   }
 }

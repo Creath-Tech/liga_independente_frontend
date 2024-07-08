@@ -3,7 +3,15 @@ import 'package:liga_independente_frontend/src/colors.dart';
 import 'package:liga_independente_frontend/src/pages/profile_page.dart';
 
 class HomeProfile extends StatelessWidget {
-  const HomeProfile({super.key});
+  final Function() filterOnTap;
+  final Function() onTap;
+  final String imageUrl;
+  const HomeProfile(
+      {super.key,
+      required this.filterOnTap,
+      required this.onTap,
+      this.imageUrl =
+          'https://icons.veryicon.com/png/o/file-type/linear-icon-2/user-132.png'});
 
   @override
   Widget build(BuildContext context) {
@@ -14,12 +22,13 @@ class HomeProfile extends StatelessWidget {
         children: [
           Row(
             children: [
-              Container(
-                margin: const EdgeInsets.only(top: 25, left: 20),
-                child: GestureDetector(
-                  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ProfilePage(),)),
-                  child: const CircleAvatar(
+              GestureDetector(
+                onTap: onTap,
+                child: Container(
+                  margin: const EdgeInsets.only(top: 25, left: 20),
+                  child: CircleAvatar(
                     radius: 30,
+                    backgroundImage: NetworkImage(imageUrl),
                   ),
                 ),
               ),
@@ -43,7 +52,7 @@ class HomeProfile extends StatelessWidget {
             child: Row(
               children: [
                 GestureDetector(
-                  onTap: () {},
+                  onTap: filterOnTap,
                   child: const Icon(
                     Icons.filter_alt_rounded,
                     color: Colors.white,
