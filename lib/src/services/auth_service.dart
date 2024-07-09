@@ -7,7 +7,7 @@ import 'package:liga_independente_frontend/src/services/user_service.dart';
 class AuthService {
   final FirebaseAuth _firebaseAuth;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final UserService userService =  UserService.instance;
+  final UserService userService = UserService.instance;
 
   AuthService(this._firebaseAuth);
 
@@ -28,30 +28,31 @@ class AuthService {
   }
 
   Future<Either<FirebaseAuthException, bool>> recoveryPassword(
-        String email) async {
-      try {
-        await _firebaseAuth.sendPasswordResetEmail(email: email);
+      String email) async {
+    try {
+      await _firebaseAuth.sendPasswordResetEmail(email: email);
 
-        return const Right(true);
-      } on FirebaseAuthException catch (_) {
-        return Left(_);
-      }
-   }
-  
-  Future<Either<FirebaseAuthException, UserCredential>> signUp(String email, String password, String name) async {
-    try{
-      final userCredential = await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);  
+      return const Right(true);
+    } on FirebaseAuthException catch (_) {
+      return Left(_);
+    }
+  }
+
+  Future<Either<FirebaseAuthException, UserCredential>> signUp(
+      String email, String password, String name) async {
+    try {
+      final userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
+          email: email, password: password);
       userCredential.user!.updateDisplayName(name);
 
       UserModel userModel = UserModel(
-        userId: userCredential.user!.uid,
-        email: email, 
-        name: name,
-        bio: '',
-        sports: [],
-        contacts: {}
-        );
-        
+          userId: userCredential.user!.uid,
+          email: email,
+          name: name,
+          bio: '',
+          sports: [],
+          contacts: {});
+
       userService.updateUser(userModel);
       setUser(userModel);
 
@@ -61,12 +62,11 @@ class AuthService {
     }
   }
 
-
-  void setUser(UserModel userModel) async{
+  void setUser(UserModel userModel) async {
     await _firestore
-    .collection('users')
-    .doc(userModel.userId)
-    .set(userModel.toJson());
+        .collection('users')
+        .doc(userModel.userId)
+        .set(userModel.toJson());
   }
 
   Stream<QuerySnapshot> getUsers() {
@@ -84,7 +84,7 @@ class AuthService {
         var userData = snapshot.docs.first.data() as Map<String, dynamic>;
         return UserModel.fromJson(userData);
       }
-      return null;
+      throw FirebaseAuthException(code: 'auth-not-found-in-users-colection');
     } catch (e) {
       rethrow;
     }

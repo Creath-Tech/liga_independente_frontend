@@ -19,6 +19,8 @@ class LoginController {
       }, (sucess) {
         onSucess.call();
       });
+    } on FirebaseAuthException catch (e) {
+      onError.call(e);
     } catch (e) {
       rethrow;
     }

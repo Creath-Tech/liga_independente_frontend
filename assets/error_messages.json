@@ -5,5 +5,7 @@
     "invalid-email": "E-MAIL INVÁLIDO",
     "argument-error": "PREENCHA OS CAMPOS",
     "user-not-found": "E-MAIL NÃO CADASTRADO!",
-    "weak-password": "A SENHA DEVE CONTER NO MÍNIMO 6 CARACTERES."
+    "weak-password": "A SENHA DEVE CONTER NO MÍNIMO 6 CARACTERES.",
+    "auth-not-found-in-users-colection": "Inconsistencia no cadastro do usuário. Entre em contato com o Administrador do sistema."
+
 }
