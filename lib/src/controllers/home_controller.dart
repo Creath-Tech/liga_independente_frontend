@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:liga_independente_frontend/src/services/auth_service.dart';
+import 'package:liga_independente_frontend/src/services/location_service.dart';
 import 'package:liga_independente_frontend/src/services/storage_service.dart';
 
 class HomeController {
@@ -8,6 +10,17 @@ class HomeController {
   StorageService storageService = StorageService();
   List<IconData> icons = [];
   ValueNotifier<List<String>> selectedSports = ValueNotifier<List<String>>([]);
+
+  final LocationService locationService = LocationService();
+
+  Future<List<DocumentSnapshot>> getUsersWithinRadius(double radius) async {
+    return await locationService.getUsersWithinRadius(radius);
+  }
+
+  Future<DocumentSnapshot> getCurrentUserDoc() async {
+    String uid = FirebaseAuth.instance.currentUser!.uid;
+    return await FirebaseFirestore.instance.collection('users').doc(uid).get();
+  }
 
   void updateSports(String sport) {
     if (selectedSports.value.contains(sport)) {
