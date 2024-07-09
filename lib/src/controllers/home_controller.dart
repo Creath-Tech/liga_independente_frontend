@@ -10,11 +10,12 @@ class HomeController {
   StorageService storageService = StorageService();
   List<IconData> icons = [];
   ValueNotifier<List<String>> selectedSports = ValueNotifier<List<String>>([]);
+  ValueNotifier<double> radius = ValueNotifier<double>(20);
 
   final LocationService locationService = LocationService();
 
-  Future<List<DocumentSnapshot>> getUsersWithinRadius(double radius) async {
-    return await locationService.getUsersWithinRadius(radius);
+  Future<List<DocumentSnapshot>> getUsersWithinRadius() async {
+    return await locationService.getUsersWithinRadius(radius.value);
   }
 
   Future<DocumentSnapshot> getCurrentUserDoc() async {
