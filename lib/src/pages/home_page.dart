@@ -24,7 +24,7 @@ void _openEndDrawer() {
 
 class _HomePageState extends State<HomePage> {
   late HomeController homeController;
-
+  double distance = 20;
   @override
   void initState() {
     super.initState();
@@ -61,12 +61,65 @@ class _HomePageState extends State<HomePage> {
                           ),
                         );
                       },
+                      settingsOnTap: () {
+                        showModalBottomSheet(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return StatefulBuilder(
+                              builder:
+                                  (BuildContext context, StateSetter setState) {
+                                return Container(
+                                  padding: const EdgeInsets.all(16.0),
+                                  color: bottomSheetColor,
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            'Ajuste a distância',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 18),
+                                          ),
+                                          Text("${distance}km",
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 18))
+                                        ],
+                                      ),
+                                      Slider(
+                                        value: distance,
+                                        activeColor: secondarycolor,
+                                        onChanged: (newValue) {
+                                          setState(() {
+                                            distance = newValue;
+                                            homeController.radius.value =
+                                                newValue;
+                                            homeController
+                                                .getUsersWithinRadius();
+                                          });
+                                        },
+                                        min: 0,
+                                        max: 100,
+                                        divisions: 10,
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                        );
+                      },
                     );
                   },
                 ),
                 Expanded(
                   child: FutureBuilder<List<DocumentSnapshot>>(
-                    future: homeController.getUsersWithinRadius(20),
+                    future: homeController.getUsersWithinRadius(),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return Center(child: customLoading());
@@ -86,10 +139,12 @@ class _HomePageState extends State<HomePage> {
                       return ValueListenableBuilder<List<String>>(
                         valueListenable: homeController.selectedSports,
                         builder: (context, sports, _) {
-                          List<DocumentSnapshot> filteredUsers = data.where((doc) {
+                          List<DocumentSnapshot> filteredUsers =
+                              data.where((doc) {
                             var userData = doc.data() as Map<String, dynamic>;
                             if (sports.isEmpty) return true;
-                            return (userData['sports'] as List).any((sport) => sports.contains(sport));
+                            return (userData['sports'] as List)
+                                .any((sport) => sports.contains(sport));
                           }).toList();
 
                           return ListView.builder(
@@ -97,13 +152,16 @@ class _HomePageState extends State<HomePage> {
                             itemBuilder: (context, index) {
                               final doc = filteredUsers[index];
                               var userData = doc.data() as Map<String, dynamic>;
-                              final image = homeController.storageService.getImage(userData['userId']);
+                              final image = homeController.storageService
+                                  .getImage(userData['userId']);
                               return FutureBuilder<String?>(
                                 future: image,
                                 builder: (context, snapshot) {
-                                  if (snapshot.connectionState == ConnectionState.waiting) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
                                     return Center(child: Container());
-                                  } else if (userData['userId'] != FirebaseAuth.instance.currentUser!.uid) {
+                                  } else if (userData['userId'] !=
+                                      FirebaseAuth.instance.currentUser!.uid) {
                                     return Column(
                                       children: [
                                         GestureDetector(
@@ -111,13 +169,16 @@ class _HomePageState extends State<HomePage> {
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                builder: (context) => ProfilePage(user: doc),
+                                                builder: (context) =>
+                                                    ProfilePage(user: doc),
                                               ),
                                             );
                                           },
                                           child: RecommendedUser(
-                                            username: userData["name"] as String,
-                                            esportes: userData["sports"] as List,
+                                            username:
+                                                userData["name"] as String,
+                                            esportes:
+                                                userData["sports"] as List,
                                             url: snapshot.hasError ||
                                                     snapshot.data == null ||
                                                     snapshot.data!.isEmpty
