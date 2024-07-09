@@ -4,9 +4,8 @@ import 'dart:math' show cos, sqrt, asin;
 
 class LocationService {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
-  
-  Future<void> saveUserLocation(Position position, String userId) async {
 
+  Future<void> saveUserLocation(Position position, String userId) async {
     await firestore.collection('users').doc(userId).set({
       'latitude': position.latitude,
       'longitude': position.longitude,
@@ -51,19 +50,22 @@ class LocationService {
     Position currentPosition = await getCurrentLocation();
     double currentLat = currentPosition.latitude;
     double currentLon = currentPosition.longitude;
-
+ 
     QuerySnapshot querySnapshot = await firestore.collection('users').get();
     List<DocumentSnapshot> allUsers = querySnapshot.docs;
-
+ 
     List<DocumentSnapshot> usersWithinRadius = allUsers.where((doc) {
       var data = doc.data() as Map<String, dynamic>;
-      double userLat = data['latitude'] as double;
-      double userLon = data['longitude'] as double;
-      double distance = calculateDistance(currentLat, currentLon, userLat, userLon);
-      return distance <= radius;
+      if (data.containsKey('latitude') && data.containsKey('longitude')) {
+        double userLat = data['latitude'];
+        double userLon = data['longitude'];
+        double distance = calculateDistance(currentLat, currentLon, userLat, userLon);
+        return distance <= radius;
+      } else {
+        return false;
+      }
     }).toList();
 
     return usersWithinRadius;
   }
-
 }
