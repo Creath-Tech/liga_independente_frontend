@@ -6,6 +6,7 @@ import 'package:liga_independente_frontend/src/pages/profile_page.dart';
 import 'package:liga_independente_frontend/src/widgets/custom_loading.dart';
 import 'package:liga_independente_frontend/src/widgets/home_profile_widget.dart';
 import 'package:liga_independente_frontend/src/widgets/recommended_users_widget.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -42,74 +43,84 @@ class _HomePageState extends State<HomePage> {
             width: MediaQuery.of(context).size.width,
             child: Column(
               children: [
-                FutureBuilder(
+                FutureBuilder<String?>(
                   future: homeController.imageUrl(),
                   builder: (context, snapshot) {
                     return HomeProfile(
                       filterOnTap: _openEndDrawer,
                       imageUrl: snapshot.hasError ||
-                              snapshot.data!.isEmpty ||
-                              !snapshot.hasData
+                              snapshot.data == null ||
+                              snapshot.data!.isEmpty
                           ? 'https://icons.veryicon.com/png/o/file-type/linear-icon-2/user-132.png'
                           : snapshot.data!,
-                      onTap: () => Navigator.push(
+                      onTap: () async {
+                        Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => ProfilePage(),
-                          )),
+                          ),
+                        );
+                      },
                     );
                   },
                 ),
                 Expanded(
-                  child: StreamBuilder(
-                    stream: homeController.authService.getUsers(),
+                  child: FutureBuilder<List<DocumentSnapshot>>(
+                    future: homeController.getUsersWithinRadius(20),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return Center(child: customLoading());
                       }
 
-                      final data = snapshot.requireData;
+                      if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                        return Center(
+                          child: Text(
+                            'Nenhum usuário encontrado em uma distância de 20 km',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        );
+                      }
 
-                      return ValueListenableBuilder(
+                      final data = snapshot.data!;
+
+                      return ValueListenableBuilder<List<String>>(
                         valueListenable: homeController.selectedSports,
                         builder: (context, sports, _) {
-                          List filteredUsers = data.docs.where((doc) {
+                          List<DocumentSnapshot> filteredUsers = data.where((doc) {
+                            var userData = doc.data() as Map<String, dynamic>;
                             if (sports.isEmpty) return true;
-                            return doc['sports']
-                                .any((sport) => sports.contains(sport));
+                            return (userData['sports'] as List).any((sport) => sports.contains(sport));
                           }).toList();
 
                           return ListView.builder(
                             itemCount: filteredUsers.length,
                             itemBuilder: (context, index) {
                               final doc = filteredUsers[index];
-                              final image = homeController.storageService
-                                  .getImage(doc.id);
+                              var userData = doc.data() as Map<String, dynamic>;
+                              final image = homeController.storageService.getImage(userData['userId']);
                               return FutureBuilder<String?>(
                                 future: image,
                                 builder: (context, snapshot) {
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
+                                  if (snapshot.connectionState == ConnectionState.waiting) {
                                     return Center(child: Container());
-                                  } else if (doc.id !=
-                                      FirebaseAuth.instance.currentUser!.uid) {
+                                  } else if (userData['userId'] != FirebaseAuth.instance.currentUser!.uid) {
                                     return Column(
                                       children: [
                                         GestureDetector(
                                           onTap: () {
                                             Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      ProfilePage(user: doc),
-                                                ));
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => ProfilePage(user: doc),
+                                              ),
+                                            );
                                           },
                                           child: RecommendedUser(
-                                            username: "${doc["name"]}",
-                                            esportes: doc["sports"],
+                                            username: userData["name"] as String,
+                                            esportes: userData["sports"] as List,
                                             url: snapshot.hasError ||
-                                                    snapshot.data!.isEmpty ||
-                                                    !snapshot.hasData
+                                                    snapshot.data == null ||
+                                                    snapshot.data!.isEmpty
                                                 ? 'https://icons.veryicon.com/png/o/file-type/linear-icon-2/user-132.png'
                                                 : snapshot.data!,
                                           ),
@@ -204,8 +215,7 @@ class _HomePageState extends State<HomePage> {
                                   });
                                 },
                                 icon: Icon(
-                                  homeController.icons[
-                                      index], // Usar o ícone específico para este item
+                                  homeController.icons[index],
                                   color: Colors.yellow,
                                 ),
                               ),
