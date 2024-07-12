@@ -45,6 +45,7 @@ class HomeController {
     try {
       final sportsJson = await remoteConfig.getSports();
       esportes = _parseSportsFromJson(sportsJson);
+      icons = List.generate(esportes.length, (index) => Icons.circle_outlined);
     } catch (e) {
       print('Erro ao carregar os esportes: $e');
       esportes = [];
@@ -57,10 +58,6 @@ class HomeController {
   }
 
   HomeController() {
-    setIcons();
-  }
-
-  void setIcons() {
-    icons = List.generate(esportes.length, (index) => Icons.circle_outlined);
+    loadSports();
   }
 }
