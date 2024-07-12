@@ -16,8 +16,8 @@ class HomePage extends StatefulWidget {
 }
 
 // Function to open the end drawer
-void _openEndDrawer(context) {
-  context.openEndDrawer();
+void _openEndDrawer(ScaffoldState scaffold) {
+  scaffold.openEndDrawer();
 }
 
 class _HomePageState extends State<HomePage> {
