@@ -15,8 +15,6 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
 // Function to open the end drawer
 void _openEndDrawer(context) {
   context.openEndDrawer();
@@ -45,7 +43,6 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: primarycolor,
-      key: _scaffoldKey,
       body: SingleChildScrollView(
         child: SafeArea(
           child: SizedBox(
