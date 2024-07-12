@@ -6,6 +6,7 @@ import 'package:liga_independente_frontend/src/pages/profile_page.dart';
 import 'package:liga_independente_frontend/src/widgets/custom_loading.dart';
 import 'package:liga_independente_frontend/src/widgets/home_profile_widget.dart';
 import 'package:liga_independente_frontend/src/widgets/recommended_users_widget.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -23,7 +24,7 @@ void _openEndDrawer() {
 
 class _HomePageState extends State<HomePage> {
   late HomeController homeController;
-
+  double distance = 20;
   @override
   void initState() {
     super.initState();
@@ -42,40 +43,107 @@ class _HomePageState extends State<HomePage> {
             width: MediaQuery.of(context).size.width,
             child: Column(
               children: [
-                FutureBuilder(
+                FutureBuilder<String?>(
                   future: homeController.imageUrl(),
                   builder: (context, snapshot) {
                     return HomeProfile(
                       filterOnTap: _openEndDrawer,
                       imageUrl: snapshot.hasError ||
-                              snapshot.data!.isEmpty ||
-                              !snapshot.hasData
+                              snapshot.data == null ||
+                              snapshot.data!.isEmpty
                           ? 'https://icons.veryicon.com/png/o/file-type/linear-icon-2/user-132.png'
                           : snapshot.data!,
-                      onTap: () => Navigator.push(
+                      onTap: () async {
+                        Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => ProfilePage(),
-                          )),
+                          ),
+                        );
+                      },
+                      settingsOnTap: () {
+                        showModalBottomSheet(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return StatefulBuilder(
+                              builder:
+                                  (BuildContext context, StateSetter setState) {
+                                return Container(
+                                  padding: const EdgeInsets.all(16.0),
+                                  color: bottomSheetColor,
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            'Ajuste a distância',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 18),
+                                          ),
+                                          Text("${distance}km",
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 18))
+                                        ],
+                                      ),
+                                      Slider(
+                                        value: distance,
+                                        activeColor: secondarycolor,
+                                        onChanged: (newValue) {
+                                          setState(() {
+                                            distance = newValue;
+                                            homeController.radius.value =
+                                                newValue;
+                                            homeController
+                                                .getUsersWithinRadius();
+                                          });
+                                        },
+                                        min: 0,
+                                        max: 100,
+                                        divisions: 10,
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                        );
+                      },
                     );
                   },
                 ),
                 Expanded(
-                  child: StreamBuilder(
-                    stream: homeController.authService.getUsers(),
+                  child: FutureBuilder<List<DocumentSnapshot>>(
+                    future: homeController.getUsersWithinRadius(),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return Center(child: customLoading());
                       }
 
-                      final data = snapshot.requireData;
+                      if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                        return Center(
+                          child: Text(
+                            'Nenhum usuário encontrado em uma distância de 20 km',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        );
+                      }
 
-                      return ValueListenableBuilder(
+                      final data = snapshot.data!;
+
+                      return ValueListenableBuilder<List<String>>(
                         valueListenable: homeController.selectedSports,
                         builder: (context, sports, _) {
-                          List filteredUsers = data.docs.where((doc) {
+                          List<DocumentSnapshot> filteredUsers =
+                              data.where((doc) {
+                            var userData = doc.data() as Map<String, dynamic>;
                             if (sports.isEmpty) return true;
-                            return doc['sports']
+                            return (userData['sports'] as List)
                                 .any((sport) => sports.contains(sport));
                           }).toList();
 
@@ -83,33 +151,37 @@ class _HomePageState extends State<HomePage> {
                             itemCount: filteredUsers.length,
                             itemBuilder: (context, index) {
                               final doc = filteredUsers[index];
+                              var userData = doc.data() as Map<String, dynamic>;
                               final image = homeController.storageService
-                                  .getImage(doc.id);
+                                  .getImage(userData['userId']);
                               return FutureBuilder<String?>(
                                 future: image,
                                 builder: (context, snapshot) {
                                   if (snapshot.connectionState ==
                                       ConnectionState.waiting) {
                                     return Center(child: Container());
-                                  } else if (doc.id !=
+                                  } else if (userData['userId'] !=
                                       FirebaseAuth.instance.currentUser!.uid) {
                                     return Column(
                                       children: [
                                         GestureDetector(
                                           onTap: () {
                                             Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      ProfilePage(user: doc),
-                                                ));
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ProfilePage(user: doc),
+                                              ),
+                                            );
                                           },
                                           child: RecommendedUser(
-                                            username: "${doc["name"]}",
-                                            esportes: doc["sports"],
+                                            username:
+                                                userData["name"] as String,
+                                            esportes:
+                                                userData["sports"] as List,
                                             url: snapshot.hasError ||
-                                                    snapshot.data!.isEmpty ||
-                                                    !snapshot.hasData
+                                                    snapshot.data == null ||
+                                                    snapshot.data!.isEmpty
                                                 ? 'https://icons.veryicon.com/png/o/file-type/linear-icon-2/user-132.png'
                                                 : snapshot.data!,
                                           ),
@@ -204,8 +276,7 @@ class _HomePageState extends State<HomePage> {
                                   });
                                 },
                                 icon: Icon(
-                                  homeController.icons[
-                                      index], // Usar o ícone específico para este item
+                                  homeController.icons[index],
                                   color: Colors.yellow,
                                 ),
                               ),

@@ -2,12 +2,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:liga_independente_frontend/src/models/user_model.dart';
+import 'package:liga_independente_frontend/src/services/location_service.dart';
 import 'package:liga_independente_frontend/src/services/user_service.dart';
 
 class AuthService {
   final FirebaseAuth _firebaseAuth;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final UserService userService = UserService.instance;
+  final UserService userService =  UserService.instance;
+  final LocationService locationService = LocationService();
 
   AuthService(this._firebaseAuth);
 
@@ -20,6 +22,10 @@ class AuthService {
       var userUid = userCredential.user!.uid;
       var userModel = await getUser(userUid);
 
+      locationService.getCurrentLocation().then(
+        (position) => locationService.saveUserLocation(position, userUid)
+      );
+      
       userService.updateUser(userModel);
       return Right(userCredential);
     } on FirebaseAuthException catch (_) {
@@ -55,6 +61,10 @@ class AuthService {
 
       userService.updateUser(userModel);
       setUser(userModel);
+
+      locationService.getCurrentLocation().then(
+        (position) => locationService.saveUserLocation(position, userModel.userId!)
+      );
 
       return Right(userCredential);
     } on FirebaseAuthException catch (_) {

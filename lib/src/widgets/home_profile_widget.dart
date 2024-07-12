@@ -5,10 +5,12 @@ class HomeProfile extends StatelessWidget {
   final Function() filterOnTap;
   final Function() onTap;
   final String imageUrl;
+  final Function() settingsOnTap;
   const HomeProfile(
       {super.key,
       required this.filterOnTap,
       required this.onTap,
+      required this.settingsOnTap,
       this.imageUrl =
           'https://icons.veryicon.com/png/o/file-type/linear-icon-2/user-132.png'});
 
@@ -60,7 +62,7 @@ class HomeProfile extends StatelessWidget {
                 ),
                 const SizedBox(width: 8), // Add some spacing manually if needed
                 GestureDetector(
-                  onTap: () {},
+                  onTap: settingsOnTap,
                   child: const Icon(
                     Icons.settings,
                     color: Colors.white,
