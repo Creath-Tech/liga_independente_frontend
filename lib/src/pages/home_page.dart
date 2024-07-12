@@ -25,10 +25,20 @@ void _openEndDrawer() {
 class _HomePageState extends State<HomePage> {
   late HomeController homeController;
   double distance = 20;
+  bool isLoading = true;
+
   @override
   void initState() {
     super.initState();
     homeController = HomeController();
+    _initializeController();
+  }
+
+  Future<void> _initializeController() async {
+    await homeController.loadSports();
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -118,90 +128,99 @@ class _HomePageState extends State<HomePage> {
                   },
                 ),
                 Expanded(
-                  child: FutureBuilder<List<DocumentSnapshot>>(
-                    future: homeController.getUsersWithinRadius(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(child: customLoading());
-                      }
+                  child: isLoading
+                      ? Center(child: customLoading())
+                      : FutureBuilder<List<DocumentSnapshot>>(
+                          future: homeController.getUsersWithinRadius(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Center(child: customLoading());
+                            }
 
-                      if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                        return Center(
-                          child: Text(
-                            'Nenhum usuário encontrado em uma distância de 20 km',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        );
-                      }
-
-                      final data = snapshot.data!;
-
-                      return ValueListenableBuilder<List<String>>(
-                        valueListenable: homeController.selectedSports,
-                        builder: (context, sports, _) {
-                          List<DocumentSnapshot> filteredUsers =
-                              data.where((doc) {
-                            var userData = doc.data() as Map<String, dynamic>;
-                            if (sports.isEmpty) return true;
-                            return (userData['sports'] as List)
-                                .any((sport) => sports.contains(sport));
-                          }).toList();
-
-                          return ListView.builder(
-                            itemCount: filteredUsers.length,
-                            itemBuilder: (context, index) {
-                              final doc = filteredUsers[index];
-                              var userData = doc.data() as Map<String, dynamic>;
-                              final image = homeController.storageService
-                                  .getImage(userData['userId']);
-                              return FutureBuilder<String?>(
-                                future: image,
-                                builder: (context, snapshot) {
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return Center(child: Container());
-                                  } else if (userData['userId'] !=
-                                      FirebaseAuth.instance.currentUser!.uid) {
-                                    return Column(
-                                      children: [
-                                        GestureDetector(
-                                          onTap: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    ProfilePage(user: doc),
-                                              ),
-                                            );
-                                          },
-                                          child: RecommendedUser(
-                                            username:
-                                                userData["name"] as String,
-                                            esportes:
-                                                userData["sports"] as List,
-                                            url: snapshot.hasError ||
-                                                    snapshot.data == null ||
-                                                    snapshot.data!.isEmpty
-                                                ? 'https://icons.veryicon.com/png/o/file-type/linear-icon-2/user-132.png'
-                                                : snapshot.data!,
-                                          ),
-                                        ),
-                                        Divider(
-                                          color: boxColor,
-                                          thickness: 2,
-                                        ),
-                                      ],
-                                    );
-                                  }
-                                  return Container();
-                                },
+                            if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                              return Center(
+                                child: Text(
+                                  'Nenhum usuário encontrado em uma distância de 20 km',
+                                  style: TextStyle(color: Colors.white),
+                                ),
                               );
-                            },
-                          );
-                        },
-                      );
-                    },
-                  ),
+                            }
+
+                            final data = snapshot.data!;
+
+                            return ValueListenableBuilder<List<String>>(
+                              valueListenable: homeController.selectedSports,
+                              builder: (context, sports, _) {
+                                List<DocumentSnapshot> filteredUsers =
+                                    data.where((doc) {
+                                  var userData =
+                                      doc.data() as Map<String, dynamic>;
+                                  if (sports.isEmpty) return true;
+                                  return (userData['sports'] as List)
+                                      .any((sport) => sports.contains(sport));
+                                }).toList();
+
+                                return ListView.builder(
+                                  itemCount: filteredUsers.length,
+                                  itemBuilder: (context, index) {
+                                    final doc = filteredUsers[index];
+                                    var userData =
+                                        doc.data() as Map<String, dynamic>;
+                                    final image = homeController.storageService
+                                        .getImage(userData['userId']);
+                                    return FutureBuilder<String?>(
+                                      future: image,
+                                      builder: (context, snapshot) {
+                                        if (snapshot.connectionState ==
+                                            ConnectionState.waiting) {
+                                          return Center(child: Container());
+                                        } else if (userData['userId'] !=
+                                            FirebaseAuth.instance.currentUser!
+                                                .uid) {
+                                          return Column(
+                                            children: [
+                                              GestureDetector(
+                                                onTap: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          ProfilePage(
+                                                              user: doc),
+                                                    ),
+                                                  );
+                                                },
+                                                child: RecommendedUser(
+                                                  username: userData["name"]
+                                                      as String,
+                                                  esportes: userData["sports"]
+                                                      as List,
+                                                  url: snapshot.hasError ||
+                                                          snapshot.data ==
+                                                              null ||
+                                                          snapshot.data!
+                                                              .isEmpty
+                                                      ? 'https://icons.veryicon.com/png/o/file-type/linear-icon-2/user-132.png'
+                                                      : snapshot.data!,
+                                                ),
+                                              ),
+                                              Divider(
+                                                color: boxColor,
+                                                thickness: 2,
+                                              ),
+                                            ],
+                                          );
+                                        }
+                                        return Container();
+                                      },
+                                    );
+                                  },
+                                );
+                              },
+                            );
+                          },
+                        ),
                 ),
               ],
             ),
@@ -251,53 +270,70 @@ class _HomePageState extends State<HomePage> {
                     ],
                   )),
               Expanded(
-                child: ListView.separated(
-                    padding: EdgeInsets.zero,
-                    itemBuilder: (context, index) {
-                      return Container(
-                          height: 30,
-                          color: Colors.grey[900],
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    homeController.updateSports(
-                                        homeController.esportes[index]);
-                                    if (homeController.icons[index] ==
-                                        Icons.circle_outlined) {
-                                      homeController.icons[index] =
-                                          Icons.circle;
-                                    } else {
-                                      homeController.icons[index] =
-                                          Icons.circle_outlined;
-                                    }
-                                  });
-                                },
-                                icon: Icon(
-                                  homeController.icons[index],
-                                  color: Colors.yellow,
-                                ),
-                              ),
-                              Container(
-                                margin: const EdgeInsets.only(top: 8),
-                                child: Text(
-                                  homeController.esportes[index],
-                                  style: const TextStyle(color: Colors.white),
-                                ),
-                              )
-                            ],
-                          ));
-                    },
-                    separatorBuilder: (context, index) => Container(
-                          margin: const EdgeInsets.symmetric(vertical: 2),
-                          child: Divider(
-                            color: Colors.grey[800],
-                            thickness: 2,
-                          ),
+                child: homeController.esportes.isEmpty
+                    ? Center(
+                        child: Text(
+                          'Nenhum esporte encontrado',
+                          style: TextStyle(color: Colors.white),
                         ),
-                    itemCount: homeController.esportes.length),
+                      )
+                    : ListView.separated(
+                        padding: EdgeInsets.zero,
+                        itemBuilder: (context, index) {
+                          if (index >= homeController.esportes.length) {
+                            return Container(); // Retorna um container vazio se o índice estiver fora do alcance
+                          }
+                          return Container(
+                              height: 30,
+                              color: Colors.grey[900],
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        homeController.updateSports(
+                                            homeController.esportes[index]);
+                                        if (index < homeController.icons.length &&
+                                            homeController.icons[index] ==
+                                                Icons.circle_outlined) {
+                                          homeController.icons[index] =
+                                              Icons.circle;
+                                        } else if (index <
+                                                homeController.icons.length &&
+                                            homeController.icons[index] ==
+                                                Icons.circle) {
+                                          homeController.icons[index] =
+                                              Icons.circle_outlined;
+                                        }
+                                      });
+                                    },
+                                    icon: Icon(
+                                      index < homeController.icons.length
+                                          ? homeController.icons[index]
+                                          : Icons.circle_outlined,
+                                      color: Colors.yellow,
+                                    ),
+                                  ),
+                                  Container(
+                                    margin: const EdgeInsets.only(top: 8),
+                                    child: Text(
+                                      homeController.esportes[index],
+                                      style:
+                                          const TextStyle(color: Colors.white),
+                                    ),
+                                  )
+                                ],
+                              ));
+                        },
+                        separatorBuilder: (context, index) => Container(
+                              margin: const EdgeInsets.symmetric(vertical: 2),
+                              child: Divider(
+                                color: Colors.grey[800],
+                                thickness: 2,
+                              ),
+                            ),
+                        itemCount: homeController.esportes.length),
               ),
               const SizedBox(
                 height: 10,

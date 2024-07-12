@@ -1,8 +1,10 @@
+import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:liga_independente_frontend/src/services/auth_service.dart';
 import 'package:liga_independente_frontend/src/services/location_service.dart';
+import 'package:liga_independente_frontend/src/services/remote_config_service.dart';
 import 'package:liga_independente_frontend/src/services/storage_service.dart';
 
 class HomeController {
@@ -13,6 +15,7 @@ class HomeController {
   ValueNotifier<double> radius = ValueNotifier<double>(20);
 
   final LocationService locationService = LocationService();
+  final RemoteConfigService remoteConfig = RemoteConfigService();
 
   Future<List<DocumentSnapshot>> getUsersWithinRadius() async {
     return await locationService.getUsersWithinRadius(radius.value);
@@ -36,55 +39,22 @@ class HomeController {
         .getImage(FirebaseAuth.instance.currentUser!.uid);
   }
 
-  List<String> esportes = [
-    'Atletismo',
-    'Baseball',
-    'Basquete',
-    'Beach Tênis',
-    'Bocha',
-    'Boliche',
-    'Boxe',
-    'Canoagem',
-    'Capoeira',
-    'Ciclismo',
-    'Corrida',
-    'Crossfit',
-    'Dama',
-    'Dança',
-    'Dardos',
-    'Dominó',
-    'Escalada',
-    'Esgrima',
-    'Futebol',
-    'Futsal',
-    'Ginástica',
-    'Golfe',
-    'Handball',
-    'Hipismo',
-    'Jiu-Jitsu',
-    'Judô',
-    'Jump',
-    'Karatê',
-    'Muay Thai',
-    'Natação',
-    'Paintball',
-    'Pebolin',
-    'Pesca',
-    'Peteca',
-    'Queimada',
-    'Rafting',
-    'Rodeio',
-    'Rugby',
-    'Sinuca',
-    'Skate',
-    'Sumô',
-    'Surf',
-    'Tênis',
-    'Vôlei',
-    'Xadrez',
-    'Yoga',
-    'Zumba'
-  ];
+  List<String> esportes = [];
+
+   Future<void> loadSports() async {
+    try {
+      final sportsJson = await remoteConfig.getSports();
+      esportes = _parseSportsFromJson(sportsJson);
+    } catch (e) {
+      print('Erro ao carregar os esportes: $e');
+      esportes = [];
+    }
+  }
+
+  List<String> _parseSportsFromJson(String sportsJson) {
+    final Map<String, dynamic> decodedJson = json.decode(sportsJson);
+    return List<String>.from(decodedJson['list_sports'] ?? []);
+  }
 
   HomeController() {
     setIcons();
