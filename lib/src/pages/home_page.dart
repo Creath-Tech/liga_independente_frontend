@@ -18,8 +18,8 @@ class HomePage extends StatefulWidget {
 final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
 // Function to open the end drawer
-void _openEndDrawer() {
-  _scaffoldKey.currentState?.openEndDrawer();
+void _openEndDrawer(context) {
+  context.openEndDrawer();
 }
 
 class _HomePageState extends State<HomePage> {
@@ -57,7 +57,7 @@ class _HomePageState extends State<HomePage> {
                   future: homeController.imageUrl(),
                   builder: (context, snapshot) {
                     return HomeProfile(
-                      filterOnTap: _openEndDrawer,
+                      filterOnTap: () => _openEndDrawer(Scaffold.of(context)),
                       imageUrl: snapshot.hasError ||
                               snapshot.data == null ||
                               snapshot.data!.isEmpty
@@ -176,8 +176,8 @@ class _HomePageState extends State<HomePage> {
                                             ConnectionState.waiting) {
                                           return Center(child: Container());
                                         } else if (userData['userId'] !=
-                                            FirebaseAuth.instance.currentUser!
-                                                .uid) {
+                                            FirebaseAuth
+                                                .instance.currentUser!.uid) {
                                           return Column(
                                             children: [
                                               GestureDetector(
@@ -199,8 +199,7 @@ class _HomePageState extends State<HomePage> {
                                                   url: snapshot.hasError ||
                                                           snapshot.data ==
                                                               null ||
-                                                          snapshot.data!
-                                                              .isEmpty
+                                                          snapshot.data!.isEmpty
                                                       ? 'https://icons.veryicon.com/png/o/file-type/linear-icon-2/user-132.png'
                                                       : snapshot.data!,
                                                 ),
@@ -294,7 +293,8 @@ class _HomePageState extends State<HomePage> {
                                       setState(() {
                                         homeController.updateSports(
                                             homeController.esportes[index]);
-                                        if (index < homeController.icons.length &&
+                                        if (index <
+                                                homeController.icons.length &&
                                             homeController.icons[index] ==
                                                 Icons.circle_outlined) {
                                           homeController.icons[index] =
