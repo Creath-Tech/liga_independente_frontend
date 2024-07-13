@@ -103,11 +103,23 @@ class ProfileController {
     }
 
     if (facebookEC.text.isNotEmpty) {
-      updatedContacts['facebook'] = facebookEC.text;
+      if (!facebookEC.text.contains("https://www.")) {
+        updatedContacts['facebook'] = "https://www.${facebookEC.text}";
+      } else if (!facebookEC.text.contains("https://")) {
+        updatedContacts['facebook'] = "https://${facebookEC.text}";
+      } else {
+        updatedContacts['facebook'] = facebookEC.text;
+      }
     }
 
     if (instagramEC.text.isNotEmpty) {
-      updatedContacts['instagram'] = instagramEC.text;
+      if (!instagramEC.text.contains("https://www.")) {
+        updatedContacts['instagram'] = "https://www.${instagramEC.text}";
+      } else if (!instagramEC.text.contains("https://")) {
+        updatedContacts['instagram'] = "https://${instagramEC.text}";
+      } else {
+        updatedContacts['instagram'] = instagramEC.text;
+      }
     }
 
     userModel!.contacts = updatedContacts;
@@ -143,6 +155,7 @@ class ProfileController {
       r'^(https?:\/\/)?(www\.)?facebook\.com\/[a-zA-Z0-9._]{1,50}\/?$',
       caseSensitive: false,
     );
+
     if (url.isNotEmpty) {
       print("FACEBOOK: ${regex.hasMatch(url)}");
       return regex.hasMatch(url);
