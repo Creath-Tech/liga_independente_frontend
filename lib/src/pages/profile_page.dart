@@ -291,9 +291,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                                     ),
                                                   ],
                                                 )
-                                              : (profileController.userService
-                                                      .user.contacts!.isEmpty
-                                                  ? Container()
                                                   : Row(
                                                       children: [
                                                         Visibility(
@@ -401,7 +398,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                           ),
                                                         )
                                                       ],
-                                                    )),
+                                                    ),
                                         );
                                       },
                                     );
