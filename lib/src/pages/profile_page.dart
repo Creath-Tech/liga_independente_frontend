@@ -74,6 +74,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   },
                                   image: imageFile,
                                   onPressed: () {
+                                    profileController.cancelAction();
                                     ModalBottomWidget.show(
                                       context,
                                       Column(
