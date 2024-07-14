@@ -103,7 +103,10 @@ class ProfileController {
     }
 
     if (facebookEC.text.isNotEmpty) {
-      if (!facebookEC.text.contains("https://www.")) {
+      if (facebookEC.text.contains("http:")) {
+        updatedContacts['facebook'] = facebookEC.text;
+      } else if (!facebookEC.text.contains("https://") &&
+          !facebookEC.text.contains("www.")) {
         updatedContacts['facebook'] = "https://www.${facebookEC.text}";
       } else if (!facebookEC.text.contains("https://")) {
         updatedContacts['facebook'] = "https://${facebookEC.text}";
@@ -113,7 +116,10 @@ class ProfileController {
     }
 
     if (instagramEC.text.isNotEmpty) {
-      if (!instagramEC.text.contains("https://www.")) {
+      if (instagramEC.text.contains("http:")) {
+        updatedContacts['instagram'] = instagramEC.text;
+      } else if (!instagramEC.text.contains("https://www.") &&
+          !instagramEC.text.contains("www.")) {
         updatedContacts['instagram'] = "https://www.${instagramEC.text}";
       } else if (!instagramEC.text.contains("https://")) {
         updatedContacts['instagram'] = "https://${instagramEC.text}";
@@ -140,7 +146,7 @@ class ProfileController {
 
   bool isValidInstagramUrl(String url) {
     final RegExp regex = RegExp(
-      r'^(https?:\/\/)?(www\.)?instagram\.com\/[a-zA-Z0-9(_)?]{1,15}\/?$',
+      r'^(https:\/\/www\.|http:\/\/|www\.)?instagram\.com\/[a-zA-Z0-9(_)?]{1,15}\/?$',
       caseSensitive: false,
     );
     if (url.isNotEmpty) {
@@ -152,7 +158,7 @@ class ProfileController {
 
   bool isValidFacebookUrl(String url) {
     final RegExp regex = RegExp(
-      r'^(https?:\/\/)?(www\.)?facebook\.com\/[a-zA-Z0-9._]{1,50}\/?$',
+      r'^(https:\/\/www\.|http:\/\/|www\.)?facebook\.com\/[a-zA-Z0-9.]{1,50}\/?$',
       caseSensitive: false,
     );
 
