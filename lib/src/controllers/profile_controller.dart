@@ -146,9 +146,10 @@ class ProfileController {
 
   bool isValidInstagramUrl(String url) {
     final RegExp regex = RegExp(
-      r'^(https:\/\/www\.|http:\/\/|www\.)?instagram\.com\/[a-zA-Z0-9(_)?]{1,15}\/?$',
+      r'^(https:\/\/www\.|http:\/\/www\.|http:\/\/|www\.)?instagram\.com\/[a-zA-Z0-9(_)?]{1,15}\/?$',
       caseSensitive: false,
     );
+
     if (url.isNotEmpty) {
       print("INSTAGRAM: ${regex.hasMatch(url)}");
       return regex.hasMatch(url);
