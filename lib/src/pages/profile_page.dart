@@ -16,6 +16,7 @@ import 'package:liga_independente_frontend/src/widgets/profile_page/profile_moda
 import 'package:liga_independente_frontend/src/widgets/profile_page/text_input_bio.dart';
 import 'package:liga_independente_frontend/src/widgets/profile_page/rounded_text_input.dart';
 import 'package:liga_independente_frontend/src/widgets/secondary_button.dart';
+import 'package:liga_independente_frontend/src/widgets/warning_message.dart';
 
 class ProfilePage extends StatefulWidget {
   final DocumentSnapshot? user;
@@ -73,6 +74,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   },
                                   image: imageFile,
                                   onPressed: () {
+                                    profileController.cancelAction();
                                     ModalBottomWidget.show(
                                       context,
                                       Column(
@@ -291,58 +293,50 @@ class _ProfilePageState extends State<ProfilePage> {
                                                     ),
                                                   ],
                                                 )
-                                                  : Row(
-                                                      children: [
-                                                        Visibility(
-                                                          visible: userCheck
+                                              : Row(
+                                                  children: [
+                                                    Visibility(
+                                                      visible: userCheck
+                                                          ? profileController
+                                                              .socialCheck(null,
+                                                                  'whatsapp')
+                                                          : profileController
+                                                              .socialCheck(
+                                                                  widget.user,
+                                                                  'whatsapp'),
+                                                      child: GestureDetector(
+                                                        onTap: () {
+                                                          profileController.abrirWhatsApp(userCheck
                                                               ? profileController
-                                                                  .socialCheck(
-                                                                      null,
-                                                                      'whatsapp')
-                                                              : profileController
-                                                                  .socialCheck(
-                                                                      widget
-                                                                          .user,
-                                                                      'whatsapp'),
-                                                          child:
-                                                              GestureDetector(
-                                                            onTap: () {
-                                                              profileController.abrirWhatsApp(userCheck
-                                                                  ? profileController
-                                                                          .userService
-                                                                          .user
-                                                                          .contacts![
-                                                                      'whatsapp']
-                                                                  : widget.user![
-                                                                          'contacts']
-                                                                      [
-                                                                      'whatsapp']);
-                                                            },
-                                                            child: CloudButton(
-                                                              color:
-                                                                  boxColorHeader,
-                                                              child:
-                                                                  Image.asset(
-                                                                'assets/icons/icon_whatsapp.png',
-                                                                height: 25,
-                                                              ),
-                                                            ),
+                                                                      .userService
+                                                                      .user
+                                                                      .contacts![
+                                                                  'whatsapp']
+                                                              : widget.user![
+                                                                      'contacts']
+                                                                  ['whatsapp']);
+                                                        },
+                                                        child: CloudButton(
+                                                          color: boxColorHeader,
+                                                          child: Image.asset(
+                                                            'assets/icons/icon_whatsapp.png',
+                                                            height: 25,
                                                           ),
                                                         ),
-                                                        Visibility(
-                                                          visible: userCheck
-                                                              ? profileController
-                                                                  .socialCheck(
-                                                                      null,
-                                                                      'facebook')
-                                                              : profileController
-                                                                  .socialCheck(
-                                                                      widget
-                                                                          .user,
-                                                                      'facebook'),
-                                                          child:
-                                                              GestureDetector(
-                                                            onTap: () => profileController.launchInBrowser(Uri.parse(userCheck
+                                                      ),
+                                                    ),
+                                                    Visibility(
+                                                      visible: userCheck
+                                                          ? profileController
+                                                              .socialCheck(null,
+                                                                  'facebook')
+                                                          : profileController
+                                                              .socialCheck(
+                                                                  widget.user,
+                                                                  'facebook'),
+                                                      child: GestureDetector(
+                                                        onTap: () => profileController
+                                                            .launchInBrowser(Uri.parse(userCheck
                                                                 ? profileController
                                                                         .userService
                                                                         .user
@@ -352,31 +346,27 @@ class _ProfilePageState extends State<ProfilePage> {
                                                                         'contacts']
                                                                     [
                                                                     'facebook'])),
-                                                            child: CloudButton(
-                                                              color:
-                                                                  boxColorHeader,
-                                                              child:
-                                                                  Image.asset(
-                                                                'assets/icons/icon_facebook.png',
-                                                                height: 25,
-                                                              ),
-                                                            ),
+                                                        child: CloudButton(
+                                                          color: boxColorHeader,
+                                                          child: Image.asset(
+                                                            'assets/icons/icon_facebook.png',
+                                                            height: 25,
                                                           ),
                                                         ),
-                                                        Visibility(
-                                                          visible: userCheck
-                                                              ? profileController
-                                                                  .socialCheck(
-                                                                      null,
-                                                                      'instagram')
-                                                              : profileController
-                                                                  .socialCheck(
-                                                                      widget
-                                                                          .user,
-                                                                      'instagram'),
-                                                          child:
-                                                              GestureDetector(
-                                                            onTap: () => profileController.launchInBrowser(Uri.parse(userCheck
+                                                      ),
+                                                    ),
+                                                    Visibility(
+                                                      visible: userCheck
+                                                          ? profileController
+                                                              .socialCheck(null,
+                                                                  'instagram')
+                                                          : profileController
+                                                              .socialCheck(
+                                                                  widget.user,
+                                                                  'instagram'),
+                                                      child: GestureDetector(
+                                                        onTap: () => profileController
+                                                            .launchInBrowser(Uri.parse(userCheck
                                                                 ? profileController
                                                                         .userService
                                                                         .user
@@ -386,19 +376,17 @@ class _ProfilePageState extends State<ProfilePage> {
                                                                         'contacts']
                                                                     [
                                                                     'instagram'])),
-                                                            child: CloudButton(
-                                                              color:
-                                                                  boxColorHeader,
-                                                              child:
-                                                                  Image.asset(
-                                                                'assets/icons/icon_instagram.png',
-                                                                height: 25,
-                                                              ),
-                                                            ),
+                                                        child: CloudButton(
+                                                          color: boxColorHeader,
+                                                          child: Image.asset(
+                                                            'assets/icons/icon_instagram.png',
+                                                            height: 25,
                                                           ),
-                                                        )
-                                                      ],
-                                                    ),
+                                                        ),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
                                         );
                                       },
                                     );
@@ -429,24 +417,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                                           .updateLoggedUser();
                                                     } else {
                                                       // Se as URLs não forem válidas, mostra uma mensagem de erro
-                                                      showDialog(
-                                                        context: context,
-                                                        builder: (context) =>
-                                                            AlertDialog(
-                                                          content: Text(
-                                                              "Link inválido"),
-                                                          actions: [
-                                                            IconButton(
-                                                              onPressed: () {
-                                                                Navigator.pop(
-                                                                    context);
-                                                              },
-                                                              icon: Icon(
-                                                                  Icons.close),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      );
+                                                      WarningMessage.show(
+                                                          context,
+                                                          "Link inválido");
                                                     }
                                                   },
                                                   text: 'CONFIRMAR',

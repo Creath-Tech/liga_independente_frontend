@@ -103,11 +103,29 @@ class ProfileController {
     }
 
     if (facebookEC.text.isNotEmpty) {
-      updatedContacts['facebook'] = facebookEC.text;
+      if (facebookEC.text.contains("http:")) {
+        updatedContacts['facebook'] = facebookEC.text;
+      } else if (!facebookEC.text.contains("https://") &&
+          !facebookEC.text.contains("www.")) {
+        updatedContacts['facebook'] = "https://www.${facebookEC.text}";
+      } else if (!facebookEC.text.contains("https://")) {
+        updatedContacts['facebook'] = "https://${facebookEC.text}";
+      } else {
+        updatedContacts['facebook'] = facebookEC.text;
+      }
     }
 
     if (instagramEC.text.isNotEmpty) {
-      updatedContacts['instagram'] = instagramEC.text;
+      if (instagramEC.text.contains("http:")) {
+        updatedContacts['instagram'] = instagramEC.text;
+      } else if (!instagramEC.text.contains("https://www.") &&
+          !instagramEC.text.contains("www.")) {
+        updatedContacts['instagram'] = "https://www.${instagramEC.text}";
+      } else if (!instagramEC.text.contains("https://")) {
+        updatedContacts['instagram'] = "https://${instagramEC.text}";
+      } else {
+        updatedContacts['instagram'] = instagramEC.text;
+      }
     }
 
     userModel!.contacts = updatedContacts;
@@ -128,9 +146,10 @@ class ProfileController {
 
   bool isValidInstagramUrl(String url) {
     final RegExp regex = RegExp(
-      r'^(https?:\/\/)?(www\.)?instagram\.com\/[a-zA-Z0-9(_)?]{1,15}\/?$',
+      r'^(https:\/\/www\.|http:\/\/www\.|http:\/\/|www\.)?instagram\.com\/[a-zA-Z0-9(_)?]{1,15}\/?$',
       caseSensitive: false,
     );
+
     if (url.isNotEmpty) {
       print("INSTAGRAM: ${regex.hasMatch(url)}");
       return regex.hasMatch(url);
@@ -140,9 +159,10 @@ class ProfileController {
 
   bool isValidFacebookUrl(String url) {
     final RegExp regex = RegExp(
-      r'^(https?:\/\/)?(www\.)?facebook\.com\/[a-zA-Z0-9._]{1,50}\/?$',
+      r'^(https:\/\/www\.|http:\/\/|www\.)?facebook\.com\/[a-zA-Z0-9.]{1,50}\/?$',
       caseSensitive: false,
     );
+
     if (url.isNotEmpty) {
       print("FACEBOOK: ${regex.hasMatch(url)}");
       return regex.hasMatch(url);
