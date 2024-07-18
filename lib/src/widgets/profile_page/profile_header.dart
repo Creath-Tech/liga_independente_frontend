@@ -54,17 +54,19 @@ class ProfileHeader extends StatelessWidget {
           margin: const EdgeInsets.only(top: 40),
           child: Stack(
             children: [
-              CircleAvatar(
-                backgroundColor: circleProfile,
-                radius: 70,
-                backgroundImage: image != null ? FileImage(image!) : null,
+              ClipOval(
                 child: image == null
                     ? const Icon(
                         Icons.person,
                         color: Colors.white,
                         size: 100,
                       )
-                    : null,
+                    : Image.file(
+                      image!,
+                      fit: BoxFit.cover,
+                      width: 170,
+                      height: 170,
+                    ),
               ),
               Visibility(
                 visible: userCheck,
