@@ -130,7 +130,27 @@ class _LoginPageState extends State<LoginPage> {
                 height: 20,
               ),
               // social login buttons
-              const SocialButtonsLoginWidget(),
+              SocialButtonsLoginWidget(
+                onTap: () async {
+                  final jsonString = await ErrorMessages().get(context);
+                  final errorMessages = jsonDecode(jsonString);
+                  loginController.signInWithGoogle(onError: (e) {
+                    if (errorMessages.containsKey(e.code)) {
+                      setState(() {
+                        errorMsg = errorMessages[e.code];
+                        visible = true;
+                      });
+                    }
+                  }, onSucess: () {
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (context) {
+                        return const HomePage();
+                      },
+                    ));
+                  });
+                },
+                social: 'google',
+              ),
             ],
           ),
         ),

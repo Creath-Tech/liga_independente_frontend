@@ -50,10 +50,10 @@ class _RegisterPageState extends State<RegisterPage> {
 
               //error message
               AuthMessage(
-                text: errorMsg, 
-                visible: visible,
-                color: errorColor,
-                context: context),
+                  text: errorMsg,
+                  visible: visible,
+                  color: errorColor,
+                  context: context),
               // text inputs
 
               CustomInput(
@@ -120,18 +120,12 @@ class _RegisterPageState extends State<RegisterPage> {
               SwitchAuthAction(
                   text: "Já possui conta?",
                   textButton: "Entrar",
-                  onPressed: widget.onTap
-              ),
-
-              // divider
-              const OrWidget(),
+                  onPressed: widget.onTap),
 
               //spacing
               const SizedBox(
                 height: 20,
               ),
-              // social login buttons
-              const SocialButtonsLoginWidget(),
             ],
           ),
         ),
