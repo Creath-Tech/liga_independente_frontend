@@ -1,26 +1,16 @@
 import 'package:flutter/material.dart';
 
 class SocialButtonsLoginWidget extends StatelessWidget {
-  const SocialButtonsLoginWidget({super.key});
+  final Function() onTap;
+  final String social;
+  const SocialButtonsLoginWidget(
+      {super.key, required this.onTap, required this.social});
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        Image.asset(
-          'assets/google.png',
-          height: 56,
-        ),
-        Image.asset(
-          'assets/facebook.png',
-          height: 56,
-        ),
-        Image.asset(
-          'assets/apple.png',
-          height: 56,
-        )
-      ],
+    return GestureDetector(
+      onTap: onTap,
+      child: Image.asset('assets/$social.png', height: 56),
     );
   }
 }
