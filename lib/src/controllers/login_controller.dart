@@ -25,4 +25,21 @@ class LoginController {
       rethrow;
     }
   }
+
+  Future<void> signInWithGoogle(
+      {required void Function(FirebaseAuthException e) onError,
+      required void Function() onSucess}) async {
+    try {
+      final result = await _authService.signInWithGoogle();
+      result.fold((e) {
+        onError.call(e);
+      }, (sucess) {
+        onSucess.call();
+      });
+    } on FirebaseAuthException catch (e) {
+      onError.call(e);
+    } catch (e) {
+      rethrow;
+    }
+  }
 }
